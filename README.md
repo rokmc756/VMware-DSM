@@ -1,11 +1,13 @@
 # What is VMware-DSM?
+This is ansible playbook to deploy conviniently VMware Data Services Manager which  offers a data-as-a-service toolkit for on-demand provisioning and automated management of Microsoft SQL, PostgreSQL, and MySQL databases on vSphere environment. VMware Data Services Manager provides both a graphical user interface and a REST API in the toolkit, enabling both administrators and developers to get the most out of the service.
+For more deatils about it, refer the following link. https://docs.vmware.com/en/VMware-Data-Services-Manager/1.5/data-services-manager/GUID-index.html
 
-# Supported VMware
-VMware 6.7.x, 7.x
-
-# Supported Platform and OS
+# Supported VMware vCenter and vSphere version
+VMware vCenter 6.7.x, 7.x
+VMware vSphere 6.7.x, 7.x
 
 # Prerequisite
+ansible
 
 # Prepare ansible host to run gpfarmer
 * MacOS
@@ -20,8 +22,6 @@ $ brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Libr
 $ sudo yum install ansible
 $ sudo yum install sshpass
 ~~~
-
-## Prepareing OS
 
 # Download / configure / run gpfarmer
 $ git clone https://github.com/rokmc756/VMware-DSM
