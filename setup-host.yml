@@ -6,5 +6,5 @@
     add_new_network_adapter: true
     configure_new_network: true
   roles:
+    - provider
     - agent
-      #    - provider
