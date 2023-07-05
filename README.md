@@ -114,5 +114,20 @@ $ vi setup-host.yml
 $ make install
 
 
+If you encounter the following error when running make install as above pyvmomi should be installed after removing pyvim.
+Because this is a completely separate package (vim editor implemented in python). However, the name conflicts enough that the files get messed up.
+~~~
+An exception occurred during task execution. To see the full traceback, use -vvv. The error was: ImportError: No module named pyVim
+~~~
+
+The following step is what cleared it up.
+~~~
+$ pip3 uninstall pyvim
+# may complain about manually added files.
+$ cd /usr/local/lib/python3.7/site-packages
+$ rm -rf pyvim
+$ pip3 install --force pyvmomi
+~~~
+
 # Planning
 Uninstall DMS Provider and Agent
