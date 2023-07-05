@@ -1,0 +1,12 @@
+[Match]
+Name=eth1
+
+[Network]
+Address=192.168.219.105/24
+DHCP=no
+LinkLocalAddressing=no
+DNS=192.168.0.199
+
+[DHCP]
+UseDNS=false
+UseNTP=false

@@ -1,0 +1,172 @@
+---
+- name: Deploy VMware Data Service Manager Provider
+  vmware_deploy_ovf:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    ovf: '{{ dsm_provider_ova_file }}'
+    datacenter: '{{ datacenter_name }}'
+    cluster: '{{ cluster_name }}'
+    datastore: '{{ datastore_name }}'
+    # resource_pool: '{{ resourcepool_name }}'
+    folder: '{{ folder_name }}'
+    wait_for_ip_address: 'no'
+    validate_certs: 'no'
+    inject_ovf_env: true
+    # networks: "{ 'VM Network' : 'VM Network', 'Management Network' : 'Internal VM Network' }"
+    networks: "{ 'Management Network' : 'VM Network', 'VM Network' : 'Internal VM Network' }"
+    fail_on_spec_warnings: 'yes'
+    disk_provisioning: 'thin'
+    power_on: 'no'
+    properties:
+      DeploymentOption.value: 'tiny'
+      vami.ip0.DMS_Provider_VA: '192.168.0.103'
+      vami.netmask0.DMS_Provider_VA: '255.255.255.0'
+      vami.gateway.DMS_Provider_VA: '192.168.0.1'
+      vami.DNS.DMS_Provider_VA: '192.168.0.199'
+      vami.ntp.DMS_Provider_VA: '0.asia.pool.ntp.org'
+      guestinfo.cis.appliance.provider.password: 'Mc002661!@#$'
+      vami.ceip.DMS_Provider_VA: ''
+      vm.vmname: ''
+  delegate_to: localhost
+  when: deploy_ovf == true
+
+#    properties:
+#      DeploymentOption.value: '{{ dms_provider_size }}'
+#      guestinfo.cis.appliance.net.addr.family: 'ipv4'
+#      guestinfo.cis.appliance.net.mode: 'static'
+#      guestinfo.cis.appliance.net.addr: '{{ vcenter_address }}'
+#      guestinfo.cis.appliance.net.pnid: "{{ vcenter_hostname }}.{{ domain }}"
+#      guestinfo.cis.appliance.net.prefix: '{{ net_prefix }}'
+#      guestinfo.cis.appliance.net.gateway: '{{ net_gateway }}'
+#      guestinfo.cis.appliance.net.dns.servers: '{{ dns_servers }}'
+#      guestinfo.cis.appliance.root.passwd: '{{ vcenter_password }}'
+#      guestinfo.cis.ceip_enabled: "False"
+#      guestinfo.cis.deployment.autoconfig: 'True'
+#      guestinfo.cis.vmdir.password: '{{ vcenter_password }}'
+#      domain: '{{ domain }}'
+#      searchpath: '{{ searchpath }}'
+#  delegate_to: 192.168.0.101
+
+
+#- name: Wait for vCenter
+#  vmware_about_facts:
+#    hostname: '{{ vcenter_address }}'
+#    username: 'administrator@vsphere.local'
+#    password: '{{ vcenter_password }}'
+#    validate_certs: no
+#  delegate_to: localhost
+#  retries: 20
+#  delay: 60
+#  register: result
+#  until: result is succeeded
+
+
+#
+- name: Gather only registered virtual machines
+  vmware_vm_info:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    vm_type: vm
+    validate_certs: 'no'
+  delegate_to: localhost
+  register: vm_info
+
+#
+- name: Set fact for virtual machine's name of dms-provider
+  set_fact:
+    dms_provider_vm_name: "{{ ( vm_info.virtual_machines | select('search', 'dms-provider') | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+
+#
+- debug:
+    msg: "{{ dms_provider_vm_name }}"
+
+#
+- name: Add multiple nics
+  vmware_guest_network:
+    name: "{{ dms_provider_vm_name }}"
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
+    state: present
+    network_name: "{{ item.network_name | default(omit) }}"
+    connected: "{{ item.connected | default(omit) }}"
+    device_type: "{{ item.device_type | default(omit) }}"
+    validate_certs: "no"
+    # vlan_id: "{{ item.vlan_id | default(omit) }}"
+  loop:
+    - network_name: 'Internal VM Network'
+      device_type: 'e1000e'
+      connected: true
+    #- vlan_id: 0
+    #  connected: false
+  when: add_new_network_adapter == true
+
+#
+- name: Start Virtual Machine
+  vmware_guest_powerstate:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    name: "{{ dms_provider_vm_name }}"
+    validate_certs: "no"
+    state: powered-on
+  when: add_new_network_adapter == true
+
+#
+- name: 180 second pause
+  pause:
+    seconds: 180
+  when: add_new_network_adapter == true
+
+#
+- name: Copy file to vm
+  vmware_guest_file_operation:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
+    vm_id: "{{ dms_provider_vm_name }}"
+    vm_username: "{{ root_username }}"
+    vm_password: "{{ root_password }}"
+    validate_certs: "no"
+    copy:
+        src: "roles/provider/templates/10-eth1.network"
+        dest: "/etc/systemd/network/10-eth1.network"
+        overwrite: true
+  delegate_to: localhost
+  when: configure_new_network == true
+
+# https://www.linkedin.com/pulse/how-configure-networking-photon-os-network-config-manager-sahani/
+- name: Run command inside a virtual machine
+  vmware_vm_shell:
+    hostname: "{{ esxi_address }}"
+    username: "{{ root_username }}"
+    password: "{{ root_password }}"
+    vm_id: "{{ dms_provider_vm_name }}"
+    vm_username: "{{ root_username }}"
+    vm_password: "{{ root_password }}"
+    vm_shell: "{{ item.shell }}"
+    vm_shell_args: "{{ item.args }}"
+    validate_certs: "no"
+  loop:
+    - { shell: "/usr/bin/chmod", args: "644 /etc/systemd/network/10-eth1.network" }
+    - { shell: "/usr/bin/chown", args: "systemd-network:systemd-network /etc/systemd/network/10-eth1.network" }
+    - { shell: "/usr/bin/systemctl", args: "restart systemd-networkd" }
+  delegate_to: localhost
+  when: configure_new_network == true
+
+#- name: Wait for vCenter
+#  vmware_about_facts:
+#    hostname: '{{ vcenter_address }}'
+#    username: 'administrator@vsphere.local'
+#    password: '{{ vcenter_password }}'
+#    validate_certs: no
+#  delegate_to: localhost
+#  retries: 20
+#  delay: 60
+#  register: result
+#  until: result is succeeded
+
