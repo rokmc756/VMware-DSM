@@ -26,6 +26,7 @@
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
     name: "{{ dms_provider_vm_name }}"
+    validate_certs: 'no'
     state: shutdown-guest
     state_change_timeout: 200
   delegate_to: localhost
@@ -37,14 +38,14 @@
     hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
-    validate_certs: no
+    validate_certs: 'no'
     # folder: "/{{ datacenter_name }}/vm/my_folder"
     name: "{{ dms_provider_vm_name }}"
     state: powered-off
   delegate_to: localhost
   register: vm_poweroff
 
-- meta: end_play
+#- meta: end_play
 
 - name: Remove virtual machine - "{{ dms_provider_vm_name }}"
   vmware_guest:
