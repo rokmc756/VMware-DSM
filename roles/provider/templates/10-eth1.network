@@ -3,10 +3,13 @@ Name=eth1
 
 [Network]
 Address=192.168.219.103/24
+DNS=192.168.0.199
 DHCP=no
 LinkLocalAddressing=no
-DNS=192.168.0.199
 
 [DHCP]
 UseDNS=false
-UseNTP=false
+
+[Route]
+Gateway=192.168.0.1
+Destination=192.168.219.0/24
