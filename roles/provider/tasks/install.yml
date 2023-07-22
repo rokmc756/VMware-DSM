@@ -135,8 +135,8 @@
     vm_password: "{{ root_password }}"
     validate_certs: "no"
     copy:
-        src: "roles/provider/templates/10-eth1.network"
-        dest: "/etc/systemd/network/10-eth1.network"
+        src: "roles/provider/templates/09-eth1.network"
+        dest: "/etc/systemd/network/09-eth1.network"
         overwrite: true
   delegate_to: localhost
   when: configure_new_network == true
@@ -154,9 +154,8 @@
     vm_shell_args: "{{ item.args }}"
     validate_certs: "no"
   loop:
-    - { shell: "/usr/bin/chmod", args: "644 /etc/systemd/network/10-eth1.network" }
-    - { shell: "/usr/bin/chown", args: "systemd-network:systemd-network /etc/systemd/network/10-eth1.network" }
-    - { shell: "/usr/bin/updatedb", args: "" }
+    - { shell: "/usr/bin/chmod", args: "644 /etc/systemd/network/09-eth1.network" }
+    - { shell: "/usr/bin/chown", args: "systemd-network:systemd-network /etc/systemd/network/09-eth1.network" }
     - { shell: "/usr/bin/systemctl", args: "daemon-reload" }
     - { shell: "/usr/bin/systemctl", args: "restart systemd-networkd" }
     # - { shell: "/usr/bin/tdnf", args: "update -y" }
