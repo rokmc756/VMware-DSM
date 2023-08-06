@@ -2,9 +2,17 @@
 - hosts: localhost
   gather_facts: false
   vars:
-    deploy_ovf: true
-    add_new_network_adapter: true
-    configure_new_network: true
+    deploy_ovf: false
+    add_new_network_adapter: false
+    configure_new_network: false
+    create_datacenter: false
+    create_cluster: false
+    create_users: true
+    ansible_ssh_user: "root"
+    ansible_ssh_pass: "Changeme12!@"
+    ansible_become_user: "moonja"
+    ansible_become_pass: "Mc002661!@"
   roles:
-    - provider
-    - agent
+    - vcenter
+#    - provider
+#    - agent

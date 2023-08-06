@@ -1,0 +1,15 @@
+[Match]
+Name=eth1
+
+[Network]
+Address=192.168.219.202/24
+DNS=192.168.0.199
+DHCP=no
+LinkLocalAddressing=no
+
+[DHCP]
+UseDNS=false
+
+[Route]
+Gateway=192.168.0.1
+Destination=192.168.219.0/24

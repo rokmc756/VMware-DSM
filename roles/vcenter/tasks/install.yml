@@ -1,0 +1,140 @@
+- name: Deploy the VCSA to an ESXi Host
+  vmware_deploy_ovf:
+    hostname: '{{ esxi_address }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    name: '{{ vcenter_hostname }}' # shortname, not FQDN
+    ovf: '{{ vcsa_ova_file }}'
+    wait_for_ip_address: true
+    validate_certs: no
+    inject_ovf_env: true
+    properties:
+      DeploymentOption.value: '{{ vcsa_size }}'                                # vCenter t-shirt size: tiny,small,medium,large, or infrastructure
+      guestinfo.cis.appliance.net.addr.family: 'ipv4'                          # ipv4 or ipv6
+      guestinfo.cis.appliance.net.mode: 'static'                               # static or dhcp
+      guestinfo.cis.appliance.net.addr: '{{ vcenter_address }}'
+      guestinfo.cis.appliance.net.pnid: "{{ domain }}"  # FQDN of vcenter server
+      guestinfo.cis.appliance.net.prefix: '{{ net_prefix }}'                   # netmask length, CIDR notation, i.e. '24'
+      guestinfo.cis.appliance.net.gateway: '{{ net_gateway }}' 
+      guestinfo.cis.appliance.net.dns.servers: '{{ dns_servers }}'             # Comma separated list of IP addresses of DNS servers.
+      guestinfo.cis.appliance.root.passwd: '{{ vcenter_password }}'
+      guestinfo.cis.ceip_enabled: "False"
+      guestinfo.cis.deployment.autoconfig: 'True'                              # Auto-configure after deployment
+      guestinfo.cis.vmdir.password: '{{ vcenter_password }}'                   # SSO Password for administrator@vsphere.local
+      domain: '{{ domain }}'
+      searchpath: '{{ searchpath }}'
+  delegate_to: localhost
+
+#
+#- name: Wait for vCenter
+#  vmware_about_facts:
+#    hostname: '{{ vcenter_address }}'
+#    username: 'administrator@vsphere.local'
+#    password: '{{ vcenter_password }}'
+#    # validate_certs: no
+#  delegate_to: localhost
+#  retries: 20
+#  delay: 60
+#  register: result
+#  until: result is succeeded
+
+#
+- name: Gather only registered virtual machines
+  vmware_vm_info:
+    hostname: '{{ esxi_address }}'
+    username: '{{ esxi_username }}'
+    password: '{{ esxi_password }}'
+    vm_type: vm
+    validate_certs: 'no'
+  delegate_to: localhost
+  register: vm_info
+
+#
+- name: Set fact for virtual machine's name of vcenter
+  set_fact:
+    vcenter_vm_name: "{{ ( vm_info.virtual_machines | select('search', 'vcenter1') | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+
+#
+- debug:
+    msg: "{{ vcenter_vm_name }}"
+
+#- meta: end_play
+
+#
+- name: Add multiple nics
+  vmware_guest_network:
+    name: "{{ vcenter_vm_name }}"
+    hostname: "{{ esxi_address }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+    # datacenter: "{{ datacenter_name }}"
+    state: present
+    network_name: "{{ item.network_name | default(omit) }}"
+    connected: "{{ item.connected | default(omit) }}"
+    device_type: "{{ item.device_type | default(omit) }}"
+    validate_certs: "no"
+    # vlan_id: "{{ item.vlan_id | default(omit) }}"
+  loop:
+    - network_name: 'Internal VM Network'
+      device_type: 'VMXNET3'
+      connected: true
+    #- vlan_id: 0
+    #  connected: false
+  when: add_new_network_adapter == true
+
+#
+- name: Start vCenter Virtual Machine
+  vmware_guest_powerstate:
+    hostname: "{{ esxi_address }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+    name: "{{ vcenter_vm_name }}"
+    validate_certs: "no"
+    state: powered-on
+  when: add_new_network_adapter == true
+
+#
+- name: 600 second pause
+  pause:
+    seconds: 600
+  when: add_new_network_adapter == true
+
+#
+- name: Copy Network Configuration to vCenter Virtual Machine
+  vmware_guest_file_operation:
+    hostname: "{{ esxi_address }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+    # datacenter: "{{ datacenter_name }}"
+    vm_id: "{{ vcenter_vm_name }}"
+    vm_username: "root"
+    vm_password: "{{ vcenter_password }}"
+    validate_certs: "no"
+    copy:
+        src: "roles/vcenter/templates/09-eth1.network"
+        dest: "/etc/systemd/network/09-eth1.network"
+        overwrite: true
+  delegate_to: localhost
+  when: configure_new_network == true
+
+# https://www.linkedin.com/pulse/how-configure-networking-photon-os-network-config-manager-sahani/
+- name: Run command inside vCenter Virtual Machine
+  vmware_vm_shell:
+    hostname: "{{ esxi_address }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+    vm_id: "{{ vcenter_vm_name }}"
+    vm_username: "{{ vcenter_root_user }}"
+    vm_password: "{{ vcenter_root_password }}"
+    vm_shell: "{{ item.shell }}"
+    vm_shell_args: "{{ item.args }}"
+    validate_certs: "no"
+  loop:
+    - { shell: "/usr/bin/chmod", args: "644 /etc/systemd/network/09-eth1.network" }
+    - { shell: "/usr/bin/chown", args: "systemd-network:systemd-network /etc/systemd/network/09-eth1.network" }
+    - { shell: "/usr/bin/systemctl", args: "daemon-reload" }
+    - { shell: "/usr/bin/systemctl", args: "restart systemd-networkd" }
+    # - { shell: "/usr/bin/tdnf", args: "update -y" }
+    #  /opt/vmware/share/vami/vami_set_network eth1 STATICV4 192.168.219.103 24 192.168.0.1
+  delegate_to: localhost
+  when: configure_new_network == true

@@ -1,0 +1,193 @@
+esxi_address: '192.168.0.101'
+esxi_username: 'root'
+esxi_password: 'Changeme12!@'
+
+vcenter_hostname: 'vcenter1'
+vcenter_password: 'Changeme12!@'
+vcenter_address: '192.168.0.202'
+vcenter_root_user: 'root'
+vcenter_root_password: 'Changeme12!@'
+vcenter_username: 'administrator@vsphere.local'
+
+net_prefix: '24'
+net_gateway: '192.168.0.1'
+dns_servers: '192.168.0.199'
+domain: 'vcenter1.jtest.pivotal.io'
+
+eth1_address: '192.168.219.202'
+eth1_network: '192.168.219.0'
+
+# searchpath: ""
+searchpath: 'jtest.pivotal.io'
+vcsa_size: 'tiny'
+vcsa_ova_file: 'roles/vcenter/files/VMware-vCenter-Server-Appliance-7.0.3.00000-18700403_OVF10.ova'
+
+datacenter_name: 'jDC01'
+cluster_name: 'jClu01'
+datastore_name: 'datastore1'
+# folder_name: ''
+# resourcepool_name: ''
+# resourcepool_name: 'Discovered virtual machine'
+# vcenter_size: '50G'
+
+dms_admin_user: 'dms-user'
+dms_admin_pass: 'Changeme12!@'
+dms_ro_user: 'dms-ro-user'
+dms_ro_pass: 'Changeme12!@'
+
+add_users_list:
+  - { user: "dms-user",  pass : "Changeme12!@", fn : "Jack", ln: "Moon" }
+  - { user: "dms-ro-user",  pass : "Changeme12!@", fn : "Rose", ln: "Moon" }
+
+add_roles_list:
+  - { user: "dms-user",  pass : "Folder.Create,Folder.Delete" }
+  - { user: "dms-ro-user",  pass : "Folder.Create,Folder.Delete" }
+
+#
+
+#    Configuring vSphere SSO Users
+#If you want to onboard an Agent to a vSphere cluster, ensure that you have created two SSO users,
+#for example dsm-user and dsm-read-only-user as follows:
+#1. Create roles with privileges defined as follows:
+#Role
+#Name
+#Role
+#Description Privileges
+#dsmroot
+#This role is
+#applied at
+#the root
+#level
+#Sessions.ValidateSession
+#dsmdc
+#This role is
+#applied at
+#the
+#datacenter
+#
+#
+#Role
+#Name
+#Role
+#Description Privileges
+#dsmcluste
+#r
+#This role is
+#applied at
+#the cluster
+#and VM
+#folder level
+#Datastore.AllocateSpace, Datastore.Browse, Datastore.DeleteFile,
+#Datastore.FileManagement, Datastore.UpdateVirtualMachineFiles,
+#Datastore.UpdateVirtualMachineMetadata, Folder.Create, Folder.Delete,
+#Folder.Move, Folder.Rename, Global.CancelTask, Host.Inventory.EditCluster,
+#Network.Assign, Resource.AssignVMToPool, ScheduledTask.Create,
+#ScheduledTask.Delete, ScheduledTask.Edit, ScheduledTask.Run,
+#VApp.ApplicationConfig, VApp.Import, VApp.InstanceConfig,
+#VirtualMachine.Config.AddExistingDisk, VirtualMachine.Config.AddNewDisk,
+#VirtualMachine.Config.AddRemoveDevice, VirtualMachine.Config.AdvancedConfig,
+#VirtualMachine.Config.Annotation, VirtualMachine.Config.ChangeTracking,
+#VirtualMachine.Config.CPUCount, VirtualMachine.Config.DiskExtend,
+#VirtualMachine.Config.DiskLease, VirtualMachine.Config.EditDevice,
+#VirtualMachine.Config.HostUSBDevice, VirtualMachine.Config.Memory,
+#VirtualMachine.Config.QueryFTCompatibility,
+#VirtualMachine.Config.QueryUnownedFiles, VirtualMachine.Config.RawDevice,
+#VirtualMachine.Config.ReloadFromPath, VirtualMachine.Config.RemoveDisk,
+#VirtualMachine.Config.Rename, VirtualMachine.Config.ResetGuestInfo,
+#VirtualMachine.Config.Resource, VirtualMachine.Config.Settings,
+#VirtualMachine.Config.SwapPlacement,
+#VirtualMachine.Config.UpgradeVirtualHardware,
+#VirtualMachine.Interact.AnswerQuestion, VirtualMachine.Interact.ConsoleInteract,
+#VirtualMachine.Interact.DeviceConnection, VirtualMachine.Interact.GuestControl,
+#VirtualMachine.Interact.PowerOff, VirtualMachine.Interact.PowerOn,
+#VirtualMachine.Interact.Reset, VirtualMachine.Interact.SetCDMedia,
+#VirtualMachine.Interact.SetFloppyMedia, VirtualMachine.Interact.Suspend,
+#VirtualMachine.Interact.ToolsInstall, VirtualMachine.Inventory.Create,
+#VirtualMachine.Inventory.CreateFromExisting, VirtualMachine.Inventory.Delete,
+#VirtualMachine.Inventory.Move, VirtualMachine.Provisioning.Clone,
+#VirtualMachine.Provisioning.CloneTemplate,
+#VirtualMachine.Provisioning.CreateTemplateFromVM,
+#VirtualMachine.Provisioning.Customize,
+#VirtualMachine.Provisioning.DeployTemplate,
+#VirtualMachine.Provisioning.DiskRandomRead,
+#VirtualMachine.Provisioning.GetVmFiles,
+#VirtualMachine.Provisioning.MarkAsTemplate,
+#VirtualMachine.Provisioning.MarkAsVM,
+#VirtualMachine.Provisioning.ModifyCustSpecs,
+#VirtualMachine.Provisioning.ReadCustSpecs, VirtualMachine.State.CreateSnapshot,
+#VirtualMachine.State.RemoveSnapshot, VirtualMachine.State.RenameSnapshot,
+#VirtualMachine.State.RevertToSnapshot"
+#
+#
+#Role
+#Name
+#Role
+#Description Privileges
+#dsmdatast
+#ore
+#This role is
+#applied at
+#the
+#datastore
+#Datastore.AllocateSpace, Datastore.Browse, Datastore.Config, Datastore.DeleteFile,
+#Datastore.FileManagement, Datastore.UpdateVirtualMachineFiles,
+#Datastore.UpdateVirtualMachineMetadata, Folder.Create, Folder.Delete,
+#Folder.Move, Folder.Rename, Global.CancelTask, Host.Inventory.EditCluster,
+#Resource.AssignVMToPool, ScheduledTask.Create, ScheduledTask.Delete,
+#ScheduledTask.Edit, ScheduledTask.Run, System.Anonymous, System.Read,
+#System.View, VApp.Import, VApp.InstanceConfig, VApp.ApplicationConfig,
+#VirtualMachine.Config.AddExistingDisk, VirtualMachine.Config.AddNewDisk,
+#VirtualMachine.Config.AddRemoveDevice, VirtualMachine.Config.AdvancedConfig,
+#VirtualMachine.Config.CPUCount, VirtualMachine.Config.ChangeTracking,
+#VirtualMachine.Config.DiskExtend, VirtualMachine.Config.DiskLease,
+#VirtualMachine.Config.EditDevice, VirtualMachine.Config.HostUSBDevice,
+#VirtualMachine.Config.Memory, VirtualMachine.Config.QueryFTCompatibility,
+#VirtualMachine.Config.QueryUnownedFiles, VirtualMachine.Config.RawDevice,
+#VirtualMachine.Config.ReloadFromPath, VirtualMachine.Config.RemoveDisk,
+#VirtualMachine.Config.Rename, VirtualMachine.Config.ResetGuestInfo,
+#VirtualMachine.Config.Resource, VirtualMachine.Config.Settings,
+#VirtualMachine.Config.SwapPlacement,
+#VirtualMachine.Config.UpgradeVirtualHardware,
+#VirtualMachine.Interact.AnswerQuestion, VirtualMachine.Interact.ConsoleInteract,
+#VirtualMachine.Interact.DeviceConnection, VirtualMachine.Interact.GuestControl,
+#VirtualMachine.Interact.PowerOff, VirtualMachine.Interact.PowerOn,
+#VirtualMachine.Interact.Reset, VirtualMachine.Interact.SetCDMedia,
+#VirtualMachine.Interact.SetFloppyMedia, VirtualMachine.Interact.Suspend,
+#VirtualMachine.Interact.ToolsInstall, VirtualMachine.Inventory.Create,
+#VirtualMachine.Inventory.CreateFromExisting, VirtualMachine.Inventory.Delete,
+#VirtualMachine.Inventory.Move, VirtualMachine.Provisioning.Clone,
+#VirtualMachine.Provisioning.CloneTemplate,
+#VirtualMachine.Provisioning.CreateTemplateFromVM,
+#VirtualMachine.Provisioning.Customize,
+#VirtualMachine.Provisioning.DeployTemplate,
+#VirtualMachine.Provisioning.DiskRandomRead,
+#VirtualMachine.Provisioning.GetVmFiles,
+#VirtualMachine.Provisioning.MarkAsTemplate,
+#VirtualMachine.Provisioning.MarkAsVM,
+#VirtualMachine.Provisioning.ModifyCustSpecs,
+#VirtualMachine.Provisioning.ReadCustSpecs, VirtualMachine.State.CreateSnapshot,
+#VirtualMachine.State.RemoveSnapshot, VirtualMachine.State.RenameSnapshot,
+#VirtualMachine.State.RevertToSnapshot
+#dsmnetw
+#ork
+#This role is
+#applied at
+#the network
+
+# Role Name Object Username Propagate
+# dsm-root Root folder dsm-user False
+# Note: Read-only role is an existing system-level role in vCenter.
+# VMware Data Services Manager Documentation
+# VMware, Inc 107
+
+# Role Name Object Username Propagate
+# dsm-dc Datacenter dsm-user False
+# dsm-cluster Cluster dsm-user True
+# dsm-cluster VM Folder dsm-user True
+# dsm-datastore Datastore dsm-user True
+# dsm-network Network dsm-user False
+# Read-only Root Folder dsm-ro-user False
+# Read-only Datacenter dsm-ro-user True
+# Read-only Distributed Virtual Switch dsm-user False
+
+# https://docs.vmware.com/en/VMware-Data-Services-Manager/1.5/data-services-manager.pdf

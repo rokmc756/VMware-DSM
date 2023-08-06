@@ -1,0 +1,9 @@
+- name: Add local role with privileges to vCenter
+  vmware_local_role_manager:
+    hostname: '{{ vcenter_hostname }}'
+    username: '{{ vcenter_username }}'
+    password: '{{ vcenter_password }}'
+    local_role_name: vmware_qa
+    local_privilege_ids: [ 'Folder.Create', 'Folder.Delete']
+    state: present
+  delegate_to: localhost
