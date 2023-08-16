@@ -28,11 +28,22 @@
 #
 - name: Create Users for VMware Data Service Manager
   include: create-users.yml
-  when: create_users == true
   tags: install
   when: create_users == true
 
 #
-- name: Uninstall DSM Agent
-  include: uninstall.yml
+- name: Create Roles for Users in VMware Data Service Manager
+  include: create-roles.yml
+  tags: install
+  when: create_roles == true
+
+#
+- name: Delete Roles for Users in VMware Data Service Manager
+  include: delete-roles.yml
   tags: uninstall
+  when: delete_roles == true
+
+#
+#- name: Uninstall DSM Agent
+#  include: uninstall.yml
+#  tags: uninstall

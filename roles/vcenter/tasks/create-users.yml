@@ -14,15 +14,35 @@
 #  #  search_string: "vsphere.local\\{{ dsm_admin_user_name }}"
 #  # tags:
 #  #  - always
+
 #
+- name: Enable normal shell if necessary
+  expect:
+    command: "sshpass -p {{ vcenter_password }} ssh -o StrictHostKeyChecking=no root@vcenter1"
+    timeout: 2
+    responses:
+      'Command>': 'shell'
+      '# ':
+        - 'chsh -s /bin/bash root'
+        - 'logout'
+  delegate_to: localhost
+  register: enable_shell_status
+  ignore_errors: true
+
 #
 - name: Add the domain user of the vsphere.local domain if it doesn't exist
-  shell: /usr/lib/vmware-vmafd/bin/dir-cli user create --account "{{ item.user }}" --user-password "{{ item.pass }}" --login "{{ vcenter_username }}" --password "{{ vcenter_password }}" --first-name "{{ item.fn }}" --last-name "{{ item.ln }}"
-  delegate_to: vcenter1.jtest.pivotal.io
-  changed_when: true
+  command: >-
+    /usr/lib/vmware-vmafd/bin/dir-cli user create
+    --account "{{ item.user }}" --user-password "{{ item.pass }}"
+    --login "{{ vcenter_username }}" --password "{{ vcenter_password }}"
+    --first-name "{{ item.fn }}" --last-name "{{ item.ln }}"
   with_items: "{{ add_users_list }}"
+  delegate_facts: true
+  delegate_to: vcenter1
+  changed_when: true
   when: gather_domain_user_info_result.domain_user_groups | length == 0
-
   # tags:
   #  - add_user
   #  - never
+
+# https://github.com/ansible-collections/community.vmware/issues/613
