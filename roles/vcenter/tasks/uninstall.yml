@@ -13,7 +13,7 @@
 #
 - name: Set fact for virtual machine's name of vCenter
   set_fact:
-    vcenter_vm_name: "{{ ( vm_info.virtual_machines | select('search', 'vcenter1') | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+    vcenter_vm_name: "{{ ( vm_info.virtual_machines | select('search', 'vcenter') | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
 
 #
 - debug:

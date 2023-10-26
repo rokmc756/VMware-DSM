@@ -22,6 +22,7 @@
     object_type: '{{ item.obj_type }}'
     object_name: '{{ item.obj_name }}'
     state: present
+    recursive: true
     validate_certs: false
   with_items: "{{ assign_objects_list }}"
   delegate_to: localhost

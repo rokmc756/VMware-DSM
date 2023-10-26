@@ -1,18 +1,22 @@
 ---
+
+#
 - name: Install Firewalld RPM package
   yum:
     name: 'firewalld'
     state: present
-#  when: disable_firewall is defined and disable_firewall
+  when: open_firewall is defined and open_firewall
 
+#
 - name: Enable Firewalld
   systemd:
     name: 'firewalld'
     state: started
     enabled: yes
   ignore_errors: true
-  when: disable_firewall is defined and disable_firewall
+  when: open_firewall is defined and open_firewall
 
+#
 - name: Open Firewall
   firewalld:
     port: '{{item}}/tcp'
@@ -35,6 +39,7 @@
 #  ignore_errors: true
 #  when: disable_firewall is defined and disable_firewall
 
+#
 - name: Whitelist of Ip addresses
   firewalld:
     zone: public
@@ -46,6 +51,7 @@
   when: open_firewall is defined and open_firewall
 #    - "{{ groups['rabbitmq'] }}"
 
+#
 - name: Bounce firewalld
   service: name=firewalld state=restarted
 

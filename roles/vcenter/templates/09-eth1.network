@@ -2,7 +2,7 @@
 Name=eth1
 
 [Network]
-Address=192.168.219.202/24
+Address=192.168.219.102/24
 DNS=192.168.0.199
 DHCP=no
 LinkLocalAddressing=no

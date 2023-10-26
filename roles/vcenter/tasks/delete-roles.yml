@@ -6,9 +6,12 @@
     local_role_name: "{{ item.name }}"
     local_privilege_ids: "{{ item.role }}"
     state: absent
+    force_remove: true
     validate_certs: false
+  ignore_errors: true
   with_items: "{{ add_roles_list }}"
   delegate_to: localhost
+  ignore_errors: true
 
 - name: Disassign user and role to Object
   community.vmware.vmware_object_role_permission:
@@ -21,5 +24,7 @@
     object_name: '{{ item.obj_name }}'
     state: absent
     validate_certs: false
+  ignore_errors: true
   with_items: "{{ assign_objects_list }}"
   delegate_to: localhost
+  ignore_errors: true

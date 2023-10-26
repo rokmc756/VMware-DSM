@@ -26,6 +26,12 @@
   when: create_cluster == true
 
 #
+- name: Add Hosts
+  include: add-hosts.yml
+  tags: install
+  when: add_hosts == true
+
+#
 - name: Create Users for VMware Data Service Manager
   include: create-users.yml
   tags: install
@@ -42,6 +48,12 @@
   include: delete-roles.yml
   tags: uninstall
   when: delete_roles == true
+
+#
+- name: Delete Users for VMware Data Service Manager
+  include: delete-users.yml
+  tags: uninstall
+  when: delete_users == true
 
 #
 #- name: Uninstall DSM Agent

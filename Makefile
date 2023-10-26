@@ -51,7 +51,7 @@ init:	setup-host.yml update-host.yml
 
 # - https://ansible-tutorial.schoolofdevops.com/control_structures/
 install: role-update setup-host.yml
-	ansible-playbook -vvv -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} setup-host.yml --tags="install"
+	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} setup-host.yml --tags="install"
 
 reinit: role-update setup-host.yml
 	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} setup-host.yml --tags="reinit"

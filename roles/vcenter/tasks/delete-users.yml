@@ -1,0 +1,52 @@
+---
+- name: Gather a domain user info of the vsphere.local domain
+  community.vmware.vcenter_domain_user_group_info:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    validate_certs: false
+    domain: "vsphere.local"
+    search_string: "vsphere.local\\dms"
+    exact_match: true
+  register: gather_domain_user_info_result
+  delegate_to: localhost
+
+#  #  search_string: "vsphere.local\\{{ dsm_admin_user_name }}"
+#  # tags:
+#  #  - always
+
+#
+- name: Enable normal shell if necessary
+  expect:
+    command: "sshpass -p {{ vcenter_password }} ssh -o StrictHostKeyChecking=no root@vcenter"
+    timeout: 2
+    responses:
+      'Command>': 'shell'
+      '# ':
+        - 'chsh -s /bin/bash root'
+        - 'logout'
+  delegate_to: localhost
+  register: enable_shell_status
+  ignore_errors: true
+
+#
+- name: Delete the domain user of the vsphere.local domain if it exists
+  command: >-
+    /usr/lib/vmware-vmafd/bin/dir-cli user delete
+    --account "{{ item.user }}"
+    --login "{{ vcenter_username }}"
+    --password "{{ vcenter_password }}"
+  ignore_errors: true
+  with_items: "{{ add_users_list }}"
+  delegate_facts: true
+  delegate_to: vcenter
+  changed_when: true
+
+#  when:
+#    - gather_domain_user_info_result.domain_user_groups | length == 1
+
+#  tags:
+#    - delete_user
+#    - never
+
+# https://github.com/ansible-collections/community.vmware/issues/613
