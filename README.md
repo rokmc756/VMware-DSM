@@ -6,7 +6,7 @@ For more deatils about it, refer the following link. https://docs.vmware.com/en/
 ![alt text](https://github.com/rokmc756/VMware-DSM/blob/main/roles/provider/files/dsm_network_daigram.png)
 
 ## VMware DSM Architecutre in vSphere
-![alt text](https://github.com/rokmc756/VMware-DSMblob/main/roles/provider/files/dsm_internal_architecture.png)
+![alt text](https://github.com/rokmc756/VMware-DSM/blob/main/roles/provider/files/dsm_internal_architecture.png)
 
 # Supported VMware vCenter and vSphere version
 VMware vCenter 6.7.x, 7.x
