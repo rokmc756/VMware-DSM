@@ -2,59 +2,65 @@
 #
 - name: Gather only registered virtual machines
   vmware_vm_info:
-    hostname: '{{ esxi_address }}'
-    username: '{{ esxi_username }}'
-    password: '{{ esxi_password }}'
+    hostname: '{{ esxi.ipaddr }}'
+    username: '{{ esxi.username }}'
+    password: '{{ esxi.password }}'
     vm_type: vm
     validate_certs: 'no'
   delegate_to: localhost
   register: vm_info
+  when: uninstall_vcenter == true
 
 #
 - name: Set fact for virtual machine's name of vCenter
   set_fact:
     vcenter_vm_name: "{{ ( vm_info.virtual_machines | select('search', 'vcenter') | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+  when: uninstall_vcenter == true
 
 #
 - debug:
     msg: "{{ vcenter_vm_name }}"
+  when: uninstall_vcenter == true
 
 #
 - name: Wait for the vCenter Virtual Machine to shutdown
   vmware_guest_powerstate:
-    hostname: "{{ esxi_address }}"
-    username: "{{ esxi_username }}"
-    password: "{{ esxi_password }}"
+    hostname: "{{ esxi.ipaddr }}"
+    username: "{{ esxi.username }}"
+    password: "{{ esxi.password }}"
     name: "{{ vcenter_vm_name }}"
     validate_certs: 'no'
     state: shutdown-guest
     state_change_timeout: 200
   delegate_to: localhost
   register: vm_shutdown
+  when: uninstall_vcenter == true
 
 #
 - name: Set the state of vCenter Virtual Machine to poweroff
   vmware_guest_powerstate:
-    hostname: "{{ esxi_address }}"
-    username: "{{ esxi_username }}"
-    password: "{{ esxi_password }}"
+    hostname: "{{ esxi.ipaddr }}"
+    username: "{{ esxi.username }}"
+    password: "{{ esxi.password }}"
     validate_certs: 'no'
     # folder: "/{{ datacenter_name }}/vm/my_folder"
     name: "{{ vcenter_vm_name }}"
     state: powered-off
   delegate_to: localhost
   register: vm_poweroff
+  when: uninstall_vcenter == true
 
 #- meta: end_play
 
 - name: Remove virtual machine - "{{ vcenter_vm_name }}"
   vmware_guest:
-    hostname: "{{ esxi_address }}"
-    username: "{{ esxi_username }}"
-    password: "{{ esxi_password }}"
+    hostname: "{{ esxi.ipaddr }}"
+    username: "{{ esxi.username }}"
+    password: "{{ esxi.password }}"
     validate_certs: no
     cluster: ""
     name: "{{ vcenter_vm_name }}"
     state: absent
   delegate_to: localhost
   register: vm_removed
+  when: uninstall_vcenter == true

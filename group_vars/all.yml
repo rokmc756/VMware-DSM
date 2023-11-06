@@ -8,19 +8,23 @@ esxi:
   password: "Changeme12!@"
 vcenter:
   hostname: "vcenter"
-  ipaddr: "192.168.0.103"
   username: "administrator@vsphere.local"
   password: "Changeme12!@"
   vm_user: "root"
   vm_password: 'Changeme12!@'
-  net_prefix: "24"
-  net_gateway: '192.168.0.1'
-  dns_servers: '192.168.0.199'
-  domain: 'vcenter.jtest.pivotal.io'
+  eth0_ipaddr: "192.168.0.103"
+  eth0_network: '192.168.0.0'
+  eth0_netmask: '255.255.255.0'
+  eth0_prefix: "24"
+  eth0_gateway: '192.168.0.1'
   eth1_address: '192.168.219.102'
   eth1_network: '192.168.219.0'
+  eth1_netmask: '255.255.255.0'
+  eth1_gateway: '192.168.219.1'
+  eth1_prefix: "24"
+  dns: '192.168.0.199'
+  domain: 'vcenter.jtest.pivotal.io'
   searchpath: 'jtest.pivotal.io'
-  ## searchpath: ""
   datacenter: 'jDC01'
   cluster: 'jClu01'
   datastore: 'datastore1'

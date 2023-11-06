@@ -1,9 +1,9 @@
 ---
 - name: Gather a domain user info of the vsphere.local domain
   community.vmware.vcenter_domain_user_group_info:
-    hostname: "{{ vcenter_hostname }}"
-    username: "{{ vcenter_username }}"
-    password: "{{ vcenter_password }}"
+    hostname: "{{ vcenter.hostname }}"
+    username: "{{ vcenter.username }}"
+    password: "{{ vcenter.password }}"
     validate_certs: false
     domain: "vsphere.local"
     search_string: "vsphere.local\\dms"
@@ -11,9 +11,9 @@
   register: gather_domain_user_info_result
   delegate_to: localhost
 
-#  #  search_string: "vsphere.local\\{{ dsm_admin_user_name }}"
-#  # tags:
-#  #  - always
+#  search_string: "vsphere.local\\{{ dsm_admin_user_name }}"
+# tags:
+#  - always
 
 #
 - name: Enable normal shell if necessary
@@ -34,8 +34,8 @@
   command: >-
     /usr/lib/vmware-vmafd/bin/dir-cli user delete
     --account "{{ item.user }}"
-    --login "{{ vcenter_username }}"
-    --password "{{ vcenter_password }}"
+    --login "{{ vcenter.username }}"
+    --password "{{ vcenter.password }}"
   ignore_errors: true
   with_items: "{{ add_users_list }}"
   delegate_facts: true

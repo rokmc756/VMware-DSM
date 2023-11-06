@@ -1,9 +1,9 @@
 - name: Deploy the VCSA to an ESXi Host
   vmware_deploy_ovf:
-    hostname: '{{ esxi_address }}'
-    username: '{{ esxi_username }}'
-    password: '{{ esxi_password }}'
-    name: '{{ vcenter_hostname }}' # shortname, not FQDN
+    hostname: '{{ esxi.ipaddr }}'
+    username: '{{ esxi.username }}'
+    password: '{{ esxi.password }}'
+    name: '{{ vcenter.hostname }}' # shortname, not FQDN
     ovf: '{{ vcsa_ova_file }}'
     wait_for_ip_address: true
     validate_certs: no
@@ -12,18 +12,19 @@
       DeploymentOption.value: '{{ vcsa_size }}'                                # vCenter t-shirt size: tiny,small,medium,large, or infrastructure
       guestinfo.cis.appliance.net.addr.family: 'ipv4'                          # ipv4 or ipv6
       guestinfo.cis.appliance.net.mode: 'static'                               # static or dhcp
-      guestinfo.cis.appliance.net.addr: '{{ vcenter_address }}'
-      guestinfo.cis.appliance.net.pnid: "{{ domain }}"  # FQDN of vcenter server
-      guestinfo.cis.appliance.net.prefix: '{{ net_prefix }}'                   # netmask length, CIDR notation, i.e. '24'
-      guestinfo.cis.appliance.net.gateway: '{{ net_gateway }}' 
-      guestinfo.cis.appliance.net.dns.servers: '{{ dns_servers }}'             # Comma separated list of IP addresses of DNS servers.
-      guestinfo.cis.appliance.root.passwd: '{{ vcenter_password }}'
+      guestinfo.cis.appliance.net.addr: '{{ vcenter.ipaddr }}'
+      guestinfo.cis.appliance.net.pnid: "{{ vcenter.domain }}"  # FQDN of vcenter server
+      guestinfo.cis.appliance.net.prefix: '{{ vcenter.prefix }}'                   # netmask length, CIDR notation, i.e. '24'
+      guestinfo.cis.appliance.net.gateway: '{{ vcenter.eth0_gateway }}' 
+      guestinfo.cis.appliance.net.dns.servers: '{{ vcenter.dns }}'             # Comma separated list of IP addresses of DNS servers.
+      guestinfo.cis.appliance.root.passwd: '{{ vcenter.vm_password }}'
       guestinfo.cis.ceip_enabled: "False"
       guestinfo.cis.deployment.autoconfig: 'True'                              # Auto-configure after deployment
-      guestinfo.cis.vmdir.password: '{{ vcenter_password }}'                   # SSO Password for administrator@vsphere.local
-      domain: '{{ domain }}'
-      searchpath: '{{ searchpath }}'
+      guestinfo.cis.vmdir.password: '{{ vcenter.password }}'                   # SSO Password for administrator@vsphere.local
+      domain: '{{ vcenter.domain }}'
+      searchpath: '{{ vcenter.searchpath }}'
   delegate_to: localhost
+  when: deploy_ovf == true
 
 #
 #- name: Wait for vCenter
@@ -39,18 +40,19 @@
 #  until: result is succeeded
 
 #
-- name: Gather only registered virtual machines
+- name: Gather only virtual machines registered
   vmware_vm_info:
-    hostname: '{{ esxi_address }}'
-    username: '{{ esxi_username }}'
-    password: '{{ esxi_password }}'
+    hostname: '{{ esxi.ipaddr }}'
+    username: '{{ esxi.username }}'
+    password: '{{ esxi.password }}'
     vm_type: vm
     validate_certs: 'no'
   delegate_to: localhost
   register: vm_info
+  when: add_new_network_adapter == true
 
 #
-- name: Set fact for virtual machine's name of vcenter
+- name: Set fact for the name of vCenter VM
   set_fact:
     vcenter_vm_name: "{{ ( vm_info.virtual_machines | select('search', 'vcenter') | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
 
@@ -63,10 +65,10 @@
 #
 - name: Add multiple nics
   vmware_guest_network:
-    name: "{{ vcenter_vm_name }}"
-    hostname: "{{ esxi_address }}"
-    username: "{{ esxi_username }}"
-    password: "{{ esxi_password }}"
+    name: "{{ vcenter.vm_name }}"
+    hostname: "{{ esxi.ipaddr }}"
+    username: "{{ esxi.username }}"
+    password: "{{ esxi.password }}"
     # datacenter: "{{ datacenter_name }}"
     state: present
     network_name: "{{ item.network_name | default(omit) }}"
@@ -85,9 +87,9 @@
 #
 - name: Start vCenter Virtual Machine
   vmware_guest_powerstate:
-    hostname: "{{ esxi_address }}"
-    username: "{{ esxi_username }}"
-    password: "{{ esxi_password }}"
+    hostname: "{{ esxi.ipaddr }}"
+    username: "{{ esxi.username }}"
+    password: "{{ esxi.password }}"
     name: "{{ vcenter_vm_name }}"
     validate_certs: "no"
     state: powered-on
@@ -102,13 +104,13 @@
 #
 - name: Copy Network Configuration to vCenter Virtual Machine
   vmware_guest_file_operation:
-    hostname: "{{ esxi_address }}"
-    username: "{{ esxi_username }}"
-    password: "{{ esxi_password }}"
+    hostname: "{{ esxi.ipaddr }}"
+    username: "{{ esxi.username }}"
+    password: "{{ esxi.password }}"
     # datacenter: "{{ datacenter_name }}"
     vm_id: "{{ vcenter_vm_name }}"
     vm_username: "root"
-    vm_password: "{{ vcenter_password }}"
+    vm_password: "{{ vcenter.password }}"
     validate_certs: "no"
     copy:
         src: "roles/vcenter/templates/09-eth1.network"
@@ -120,12 +122,12 @@
 # https://www.linkedin.com/pulse/how-configure-networking-photon-os-network-config-manager-sahani/
 - name: Run command inside vCenter Virtual Machine
   vmware_vm_shell:
-    hostname: "{{ esxi_address }}"
-    username: "{{ esxi_username }}"
-    password: "{{ esxi_password }}"
+    hostname: "{{ esxi.ipaddr }}"
+    username: "{{ esxi.username }}"
+    password: "{{ esxi.password }}"
     vm_id: "{{ vcenter_vm_name }}"
-    vm_username: "{{ vcenter_root_user }}"
-    vm_password: "{{ vcenter_root_password }}"
+    vm_username: "{{ vcenter.vm_user }}"
+    vm_password: "{{ vcenter.vm_password }}"
     vm_shell: "{{ item.shell }}"
     vm_shell_args: "{{ item.args }}"
     validate_certs: "no"

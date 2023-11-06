@@ -15,7 +15,6 @@
 #
 - name: Create Datacenter
   include: create-datacenter.yml
-  when: create_datacneter == true
   tags: install
   when: create_datacenter == true
 
@@ -56,6 +55,7 @@
   when: delete_users == true
 
 #
-#- name: Uninstall DSM Agent
-#  include: uninstall.yml
-#  tags: uninstall
+- name: Uninstall and destory vCenter VM
+  include: uninstall.yml
+  tags: uninstall
+  when: uninstall_vcenter == true
