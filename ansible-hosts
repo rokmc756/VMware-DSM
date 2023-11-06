@@ -1,6 +1,5 @@
 [all:vars]
 ssh_key_filename="id_rsa"
-# remote_machine_username="jomoon"
 remote_machine_username="root"
 remote_machine_password="Changeme12!@"
 ansible_python_interpreter=/usr/bin/python3
@@ -9,13 +8,13 @@ ansible_python_interpreter=/usr/bin/python3
 esxi7 ansible_ssh_host=192.168.0.101
 
 [vcenter]
-vcenter1 ansible_ssh_host=192.168.0.202 ansible_user=root ansible_password='Changeme12!@'
+vcenter ansible_ssh_host=192.168.0.102 ansible_user=root ansible_password='Changeme12!@'
 
 [provider]
-dms-provider1 ansible_ssh_host=192.168.0.203
+dms-provider1 ansible_ssh_host=192.168.0.103
 
 [agent]
-dms-agent1 ansible_ssh_host=192.168.0.205
+dms-agent1 ansible_ssh_host=192.168.0.105
 
 [minio]
 rk9-minio ansible_ssh_host=192.168.0.98
