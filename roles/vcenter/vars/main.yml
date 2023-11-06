@@ -1,31 +1,46 @@
-esxi_address: '192.168.0.101'
-esxi_username: 'root'
-esxi_password: 'Changeme12!@'
+#esxi_address: '192.168.0.101'
+#esxi_username: 'root'
+#esxi_password: 'Changeme12!@'
 
-vcenter_hostname: 'vcenter'
-vcenter_password: 'Changeme12!@'
-vcenter_address: '192.168.0.102'
-vcenter_root_user: 'root'
-vcenter_root_password: 'Changeme12!@'
-vcenter_username: 'administrator@vsphere.local'
+#vcenter_hostname: 'vcenter'
+#vcenter_password: 'Changeme12!@'
+#vcenter_address: '192.168.0.102'
+#vcenter_root_user: 'root'
+#vcenter_root_password: 'Changeme12!@'
+#vcenter_username: 'administrator@vsphere.local'
 
-net_prefix: '24'
-net_gateway: '192.168.0.1'
-dns_servers: '192.168.0.199'
-domain: 'vcenter.jtest.pivotal.io'
+#net_prefix: '24'
+#net_gateway: '192.168.0.1'
+#dns_servers: '192.168.0.199'
+#domain: 'vcenter.jtest.pivotal.io'
 
-eth1_address: '192.168.219.102'
-eth1_network: '192.168.219.0'
+#eth1_address: '192.168.219.102'
+#eth1_network: '192.168.219.0'
 
 # searchpath: ""
-searchpath: 'jtest.pivotal.io'
+#searchpath: 'jtest.pivotal.io'
+
+# create_datacenter: false
+# create_cluster: false
+# add_hosts: false
+# create_users: false
+# create_roles: false
+# delete_users: false
+# delete_roles: false
+# ansible_ssh_user: "root"
+# ansible_ssh_pass: "Changeme12!@"
+# configure_firewall: true
+# ansible_become_user: "moonja"
+# ansible_become_pass: "changeme"
+
+
 vcsa_size: 'tiny'
 vcsa_ova_file: 'roles/vcenter/files/VMware-vCenter-Server-Appliance-7.0.3.00000-18700403_OVF10.ova'
 # VMware-vCenter-Server-Appliance-7.0.3.00000-18700403_OVF10.ova"
 
-datacenter_name: 'jDC01'
-cluster_name: 'jClu01'
-datastore_name: 'datastore1'
+#datacenter_name: 'jDC01'
+#cluster_name: 'jClu01'
+#datastore_name: 'datastore1'
 
 # folder_name: ''
 # resourcepool_name: ''

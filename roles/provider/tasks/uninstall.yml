@@ -2,59 +2,72 @@
 #
 - name: Gather only registered virtual machines
   vmware_vm_info:
-    hostname: '{{ vcenter_hostname }}'
-    username: '{{ vcenter_username }}'
-    password: '{{ vcenter_password }}'
+    hostname: '{{ vcenter.hostname }}'
+    username: '{{ vcenter.username }}'
+    password: '{{ vcenter.password }}'
     vm_type: vm
     validate_certs: 'no'
   delegate_to: localhost
   register: vm_info
 
 #
-- name: Set fact for virtual machine's name of dms-provider
+- name: Set fact for checking if the name of DSM Provider Virtual Machine exists
   set_fact:
-    dms_provider_vm_name: "{{ ( vm_info.virtual_machines | select('search', dms_provider_vmname ) | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+    dsm_provider_vm_name: "{{ ( vm_info.virtual_machines | select('search', prefix_dsm_provider_vm_name ) | list | string ) }}"
 
 #
-- debug:
-    msg: "{{ dms_provider_vm_name }}"
+#- debug:
+#    msg: "{{ dsm_provider_vm_name }}"
 
 #
-- name: Wait for the virtual machine to shutdown
+- name: Set fact for the name of VMware DSM Provider VM
+  set_fact:
+    dsm_provider_vm_name: "{{ ( vm_info.virtual_machines | select('search', prefix_dsm_provider_vm_name ) | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+  when: ( prefix_dsm_provider_vm_name in dsm_provider_vm_name )
+
+#
+#- debug:
+#    msg: "{{ dsm_provider_vm_name }}"
+
+#
+- name: Wait until VMware Provider VM get shutdown
   vmware_guest_powerstate:
-    hostname: "{{ vcenter_hostname }}"
-    username: "{{ vcenter_username }}"
-    password: "{{ vcenter_password }}"
-    name: "{{ dms_provider_vm_name }}"
+    hostname: "{{ vcenter.hostname }}"
+    username: "{{ vcenter.username }}"
+    password: "{{ vcenter.password }}"
+    name: "{{ dsm_provider_vm_name }}"
     validate_certs: 'no'
     state: shutdown-guest
     state_change_timeout: 200
   delegate_to: localhost
   register: vm_shutdown
+  when: ( deploy_ovf == true ) and ( prefix_dsm_provider_vm_name in dsm_provider_vm_name )
 
 #
-- name: Set the state of a virtual machine to poweroff
+- name: Set the state of VMware Provider VM into poweroff
   vmware_guest_powerstate:
-    hostname: "{{ vcenter_hostname }}"
-    username: "{{ vcenter_username }}"
-    password: "{{ vcenter_password }}"
+    hostname: "{{ vcenter.hostname }}"
+    username: "{{ vcenter.username }}"
+    password: "{{ vcenter.password }}"
     validate_certs: 'no'
     # folder: "/{{ datacenter_name }}/vm/my_folder"
-    name: "{{ dms_provider_vm_name }}"
+    name: "{{ dsm_provider_vm_name }}"
     state: powered-off
   delegate_to: localhost
   register: vm_poweroff
+  when: ( deploy_ovf == true ) and ( prefix_dsm_provider_vm_name in dsm_provider_vm_name )
 
 #- meta: end_play
 
-- name: Remove virtual machine - "{{ dms_provider_vm_name }}"
+- name: Remove VMware DSM Provider VM - "{{ dsm_provider_vm_name }}"
   vmware_guest:
-    hostname: "{{ vcenter_hostname }}"
-    username: "{{ vcenter_username }}"
-    password: "{{ vcenter_password }}"
+    hostname: "{{ vcenter.hostname }}"
+    username: "{{ vcenter.username }}"
+    password: "{{ vcenter.password }}"
     validate_certs: no
     cluster: ""
-    name: "{{ dms_provider_vm_name }}"
+    name: "{{ dsm_provider_vm_name }}"
     state: absent
   delegate_to: localhost
   register: vm_removed
+  when: ( deploy_ovf == true ) and ( prefix_dsm_provider_vm_name in dsm_provider_vm_name )

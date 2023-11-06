@@ -2,6 +2,12 @@
 This is ansible playbook to deploy conviniently VMware Data Services Manager which  offers a data-as-a-service toolkit for on-demand provisioning and automated management of Microsoft SQL, PostgreSQL, and MySQL databases on vSphere environment. VMware Data Services Manager provides both a graphical user interface and a REST API in the toolkit, enabling both administrators and developers to get the most out of the service.
 For more deatils about it, refer the following link. https://docs.vmware.com/en/VMware-Data-Services-Manager/1.5/data-services-manager/GUID-index.html
 
+
+
+## VMware DSM Architecutre
+![alt text](https://github.com/rokmc756/VMware-DSM/blob/main/roles/provider/files/dsm_network_daigram.png)
+![alt text](https://github.com/rokmc756/VMware-DSMblob/main/roles/provider/files/dsm_internal_architecture.png)
+
 # Supported VMware vCenter and vSphere version
 VMware vCenter 6.7.x, 7.x
 VMware vSphere 6.7.x, 7.x

@@ -1,2 +1,58 @@
 # ansible_become_pass: "Changeme12!@"
 ansible_become_pass: "Changeme12!@!@"
+
+esxi:
+  hostname: "esxi.jtest.pivotal.io"
+  ipaddr: "192.168.0.101"
+  username: "root"
+  password: "Changeme12!@"
+vcenter:
+  hostname: "vcenter"
+  ipaddr: "192.168.0.103"
+  username: "administrator@vsphere.local"
+  password: "Changeme12!@"
+  vm_user: "root"
+  vm_password: 'Changeme12!@'
+  net_prefix: "24"
+  net_gateway: '192.168.0.1'
+  dns_servers: '192.168.0.199'
+  domain: 'vcenter.jtest.pivotal.io'
+  eth1_address: '192.168.219.102'
+  eth1_network: '192.168.219.0'
+  searchpath: 'jtest.pivotal.io'
+  ## searchpath: ""
+  datacenter: 'jDC01'
+  cluster: 'jClu01'
+  datastore: 'datastore1'
+dsm:
+  provider:
+    vm_user: 'root'
+    vm_password: 'Changeme12!@'
+    eth0_ipaddr: '192.168.0.103'
+    eth1_ipaddr: '192.168.219.103'
+    net_prefix: '24'
+    netmask: '255.255.255.0'
+    gateway: '192.168.0.1'
+    dns: '192.168.0.199'
+    dns_servers: '192.168.0.199,8.8.8.8,168.126.63.1'
+    domain: 'dsm-provider.jtest.pivotal.io'
+    dsm_provider_size: '50G'
+    ntp: "0.asia.pool.ntp.org"
+    folder_name: ''
+    vm_name: ''
+  agent:
+    vm_user: 'root'
+    vm_password: 'Changeme12!@'
+    eth0_ipaddr: '192.168.0.105'
+    eth1_ipaddr: '192.168.219.105'
+    prefix: '24'
+    netmask: '255.255.255.0'
+    gateway: '192.168.0.1'
+    dns: '192.168.0.199'
+    dns_servers: '192.168.0.199,8.8.8.8,168.126.63.1'
+    ntp: "0.asia.pool.ntp.org"
+    domain: 'dsm-agent.jtest.pivotal.io'
+    searchpath: 'jtest.pivotal.io'
+    folder_name: ''
+    provider_username: 'jomoon@pivotal.io'
+    provider_password: 'Changeme12!@'

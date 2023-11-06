@@ -1,15 +1,40 @@
 ---
-- name: Deploy VMware Data Service Manager Provider
+#
+- name: Gather only virtual machines registered
+  vmware_vm_info:
+    hostname: '{{ vcenter.hostname }}'
+    username: '{{ vcenter.username }}'
+    password: '{{ vcenter.password }}'
+    vm_type: vm
+    validate_certs: 'no'
+  delegate_to: localhost
+  register: vm_info
+
+#
+- name: Set fact for the name of DSM Provider VM
+  set_fact:
+    dsm_provider_vm_name: "{{ vm_info.virtual_machines | select('search', prefix_dsm_provider_vm_name ) | list | string }}"   # It's only for determining if virtual machines exists
+
+#
+- debug:
+    msg: "{{ prefix_dsm_provider_vm_name }}"
+
+#
+- debug:
+    msg: "{{ dsm_provider_vm_name }}"
+
+#
+- name: Deploy VMware DSM Provider VM
   vmware_deploy_ovf:
-    hostname: '{{ vcenter_hostname }}'
-    username: '{{ vcenter_username }}'
-    password: '{{ vcenter_password }}'
+    hostname: '{{ vcenter.hostname }}'
+    username: '{{ vcenter.username }}'
+    password: '{{ vcenter.password }}'
     ovf: '{{ dsm_provider_ova_file }}'
-    datacenter: '{{ datacenter_name }}'
-    cluster: '{{ cluster_name }}'
-    datastore: '{{ datastore_name }}'
+    datacenter: '{{ vcenter.datacenter }}'
+    cluster: '{{ vcenter.cluster }}'
+    datastore: '{{ vcenter.datastore }}'
     # resource_pool: '{{ resourcepool_name }}'
-    folder: '{{ folder_name }}'
+    folder: '{{ dsm.provider.folder_name }}'
     wait_for_ip_address: 'no'
     validate_certs: 'no'
     inject_ovf_env: true
@@ -20,78 +45,47 @@
     power_on: 'no'
     properties:
       DeploymentOption.value: 'tiny'
-      vami.ip0.DMS_Provider_VA: '192.168.0.103'
-      vami.netmask0.DMS_Provider_VA: '255.255.255.0'
-      vami.ip1.DMS_Provider_VA: '192.168.219.103'
-      vami.netmask1.DMS_Provider_VA: '255.255.255.0'
-      vami.gateway.DMS_Provider_VA: '192.168.0.1'
-      vami.DNS.DMS_Provider_VA: '192.168.0.199'
-      vami.ntp.DMS_Provider_VA: '0.asia.pool.ntp.org'
-      guestinfo.cis.appliance.provider.password: '{{ root_password }}'
+      vami.ip0.DMS_Provider_VA: '{{ dsm.provider.eth0_ipaddr }}'
+      vami.netmask0.DMS_Provider_VA: '{{ dsm.provider.netmask }}'
+      vami.ip1.DMS_Provider_VA: '{{ dsm.provider.eth1_ipaddr }}'
+      vami.netmask1.DMS_Provider_VA: '{{ dsm.provider.netmask }}'
+      vami.gateway.DMS_Provider_VA: '{{ dsm.provider.gateway }}'
+      vami.DNS.DMS_Provider_VA: '{{ dsm.provider.dns }}'
+      vami.ntp.DMS_Provider_VA: '{{ dsm.provider.ntp }}'
+      guestinfo.cis.appliance.provider.password: '{{ dsm.provider.vm_password }}'
       vami.ceip.DMS_Provider_VA: ''
       vm.vmname: ''
   delegate_to: localhost
-  when: deploy_ovf == true
-
-#    properties:
-#      DeploymentOption.value: '{{ dms_provider_size }}'
-#      guestinfo.cis.appliance.net.addr.family: 'ipv4'
-#      guestinfo.cis.appliance.net.mode: 'static'
-#      guestinfo.cis.appliance.net.addr: '{{ vcenter_address }}'
-#      guestinfo.cis.appliance.net.pnid: "{{ vcenter_hostname }}.{{ domain }}"
-#      guestinfo.cis.appliance.net.prefix: '{{ net_prefix }}'
-#      guestinfo.cis.appliance.net.gateway: '{{ net_gateway }}'
-#      guestinfo.cis.appliance.net.dns.servers: '{{ dns_servers }}'
-#      guestinfo.cis.appliance.root.passwd: '{{ vcenter_password }}'
-#      guestinfo.cis.ceip_enabled: "False"
-#      guestinfo.cis.deployment.autoconfig: 'True'
-#      guestinfo.cis.vmdir.password: '{{ vcenter_password }}'
-#      domain: '{{ domain }}'
-#      searchpath: '{{ searchpath }}'
-#  delegate_to: 192.168.0.101
-
-
-#- name: Wait for vCenter
-#  vmware_about_facts:
-#    hostname: '{{ vcenter_address }}'
-#    username: 'administrator@vsphere.local'
-#    password: '{{ vcenter_password }}'
-#    validate_certs: no
-#  delegate_to: localhost
-#  retries: 20
-#  delay: 60
-#  register: result
-#  until: result is succeeded
-
+  when: ( deploy_ovf == true ) and ( prefix_dsm_provider_vm_name not in dsm_provider_vm_name )
 
 #
-- name: Gather only registered virtual machines
+- name: Gather only virtual machines registered
   vmware_vm_info:
-    hostname: '{{ vcenter_hostname }}'
-    username: '{{ vcenter_username }}'
-    password: '{{ vcenter_password }}'
+    hostname: '{{ vcenter.hostname }}'
+    username: '{{ vcenter.username }}'
+    password: '{{ vcenter.password }}'
     vm_type: vm
     validate_certs: 'no'
   delegate_to: localhost
   register: vm_info
 
 #
-- name: Set fact for virtual machine's name of DSM Provider
+- name: Set fact for the name of DSM Provider VM
   set_fact:
-    dsm_provider_vm_name: "{{ ( vm_info.virtual_machines | select('search', dsm_provider_vmname ) | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+    dsm_provider_vm_name: "{{ ( vm_info.virtual_machines | select('search', prefix_dsm_provider_vm_name ) | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
 
 #
 - debug:
     msg: "{{ dsm_provider_vm_name }}"
 
 #
-- name: Add multiple nics
+- name: Add secondary network adapter into VMware DSM Provider VM
   vmware_guest_network:
     name: "{{ dsm_provider_vm_name }}"
-    hostname: "{{ vcenter_hostname }}"
-    username: "{{ vcenter_username }}"
-    password: "{{ vcenter_password }}"
-    datacenter: "{{ datacenter_name }}"
+    hostname: "{{ vcenter.hostname }}"
+    username: "{{ vcenter.username }}"
+    password: "{{ vcenter.password }}"
+    datacenter: "{{ vcenter.datacenter }}"
     state: present
     network_name: "{{ item.network_name | default(omit) }}"
     connected: "{{ item.connected | default(omit) }}"
@@ -104,52 +98,52 @@
       connected: true
     #- vlan_id: 0
     #  connected: false
-  when: add_new_network_adapter == true
+  when: ( add_new_network_adapter == true ) and ( prefix_dsm_provider_vm_name in dsm_provider_vm_name )
 
 #
-- name: Start Virtual Machine
+- name: Power VMware DSM Provider VM on
   vmware_guest_powerstate:
-    hostname: "{{ vcenter_hostname }}"
-    username: "{{ vcenter_username }}"
-    password: "{{ vcenter_password }}"
+    hostname: "{{ vcenter.hostname }}"
+    username: "{{ vcenter.username }}"
+    password: "{{ vcenter.password }}"
     name: "{{ dsm_provider_vm_name }}"
     validate_certs: "no"
     state: powered-on
-  when: add_new_network_adapter == true
+  when: ( add_new_network_adapter == true ) and ( prefix_dsm_provider_vm_name in dsm_provider_vm_name )
 
 #
-- name: 180 second pause
+- name: Pause ansible playbook for 20 second pause until VMware DSM Provider VM comes up
   pause:
-    seconds: 180
-  when: add_new_network_adapter == true
+    seconds: 120
+  when: ( add_new_network_adapter == true ) and ( prefix_dsm_provider_vm_name in dsm_provider_vm_name )
 
 #
-- name: Copy file to vm
+- name: Copy second network configuration file into VMware DSM Provider VM
   vmware_guest_file_operation:
-    hostname: "{{ vcenter_hostname }}"
-    username: "{{ vcenter_username }}"
-    password: "{{ vcenter_password }}"
-    datacenter: "{{ datacenter_name }}"
+    hostname: "{{ vcenter.hostname }}"
+    username: "{{ vcenter.username }}"
+    password: "{{ vcenter.password }}"
+    datacenter: "{{ vcenter.datacenter }}"
     vm_id: "{{ dsm_provider_vm_name }}"
-    vm_username: "{{ root_username }}"
-    vm_password: "{{ root_password }}"
+    vm_username: "{{ dsm.provider.vm_user }}"
+    vm_password: "{{ dsm.provider.vm_password }}"
     validate_certs: "no"
     copy:
         src: "roles/provider/templates/09-eth1.network"
         dest: "/etc/systemd/network/09-eth1.network"
         overwrite: true
   delegate_to: localhost
-  when: configure_new_network == true
+  when: ( configure_new_network == true ) and ( prefix_dsm_provider_vm_name in dsm_provider_vm_name )
 
 # https://www.linkedin.com/pulse/how-configure-networking-photon-os-network-config-manager-sahani/
-- name: Run command inside a virtual machine
+- name: Run relevant commands to apply new network configuration in VMware DSM Provider VM
   vmware_vm_shell:
-    hostname: "{{ esxi_address }}"
-    username: "{{ root_username }}"
-    password: "{{ root_password }}"
+    hostname: "{{ esxi.ipaddr }}"
+    username: "{{ esxi.username }}"
+    password: "{{ esxi.password }}"
     vm_id: "{{ dsm_provider_vm_name }}"
-    vm_username: "{{ root_username }}"
-    vm_password: "{{ root_password }}"
+    vm_username: "{{ dsm.provider.vm_user }}"
+    vm_password: "{{ dsm.provider.vm_password }}"
     vm_shell: "{{ item.shell }}"
     vm_shell_args: "{{ item.args }}"
     validate_certs: "no"
@@ -161,16 +155,5 @@
     # - { shell: "/usr/bin/tdnf", args: "update -y" }
     #  /opt/vmware/share/vami/vami_set_network eth1 STATICV4 192.168.219.103 24 192.168.0.1
   delegate_to: localhost
-  when: configure_new_network == true
+  when: ( configure_new_network == true ) and ( prefix_dsm_provider_vm_name in dsm_provider_vm_name )
 
-#- name: Wait for vCenter
-#  vmware_about_facts:
-#    hostname: '{{ vcenter_address }}'
-#    username: 'administrator@vsphere.local'
-#    password: '{{ vcenter_password }}'
-#    validate_certs: no
-#  delegate_to: localhost
-#  retries: 20
-#  delay: 60
-#  register: result
-#  until: result is succeeded

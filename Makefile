@@ -30,7 +30,7 @@ all:
 	done
 
 init:	setup-host.yml update-host.yml
-	$(shell sed -i -e '2s/.*/ansible_become_pass: ${ANSIBLE_TARGET_PASS}/g' ./group_vars/all.yml)
+	# $(shell sed -i -e '2s/.*/ansible_become_pass: ${ANSIBLE_TARGET_PASS}/g' ./group_vars/all.yml)
 	@echo ""
 	@for GPHOST in ${GPHOSTS}; do \
 		IP=$${GPHOST#*,}; \
@@ -50,13 +50,13 @@ init:	setup-host.yml update-host.yml
 
 # - https://ansible-tutorial.schoolofdevops.com/control_structures/
 install: role-update install-host.yml
-	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} install-host.yml --tags="install"
+	ansible-playbook -vvv -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} install-host.yml --tags="install"
 
 reinit: role-update reinit-host.yml
 	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} reinit-host.yml --tags="reinit"
 
 uninstall: role-update uninstall-host.yml
-	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} uninstall-host.yml --tags="uninstall"
+	ansible-playbook -vvv -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} uninstall-host.yml --tags="uninstall"
 
 upgrade: role-update upgrade-host.yml
 	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} upgrade-host.yml --tags="upgrade"
@@ -68,7 +68,7 @@ update:
 no_targets__:
 role-update:
 	sh -c "$(MAKE) -p no_targets__ | awk -F':' '/^[a-zA-Z0-9][^\$$#\/\\t=]*:([^=]|$$)/ {split(\$$1,A,/ /);for(i in A)print A[i]}' | grep -v '__\$$' | grep '^ansible-update-*'" | xargs -n 1 make --no-print-directory
-        $(shell sed -i -e '2s/.*/ansible_become_pass: ${ANSIBLE_HOST_PASS}/g' ./group_vars/all.yml )
+#        $(shell sed -i -e '2s/.*/ansible_become_pass: ${ANSIBLE_HOST_PASS}/g' ./group_vars/all.yml )
 
 ssh:
 	ssh -o UserKnownHostsFile=./known_hosts ${USERNAME}@${IP}

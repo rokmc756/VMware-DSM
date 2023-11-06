@@ -1,64 +1,73 @@
 ---
 #
-- name: Gather only registered virtual machines
+- name: Gather only virtual machines registered
   vmware_vm_info:
-    hostname: '{{ vcenter_hostname }}'
-    username: '{{ vcenter_username }}'
-    password: '{{ vcenter_password }}'
+    hostname: '{{ vcenter.hostname }}'
+    username: '{{ vcenter.username }}'
+    password: '{{ vcenter.password }}'
     vm_type: vm
     validate_certs: 'no'
   delegate_to: localhost
   register: vm_info
 
 #
-- name: Set fact of virtual machine's name of DSM Agent
+- name: Set fact for checking if the name of VMware DSM Agent VM exists
   set_fact:
-    dsm_agent_vm_name: "{{ ( vm_info.virtual_machines | select('search', dsm_agent_vmname ) ) }}"
-
-    #  | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
-    # dsm_agent_vm_name: "{{ ( vm_info.virtual_machines | select('search', dsm_agent_vmname ) | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+    dsm_agent_vm_name: "{{ ( vm_info.virtual_machines | select('search', prefix_dsm_agent_vm_name ) | list | string ) }}"
 
 #
-- debug:
-    msg: "{{ dsm_agent_vm_name }}"
-
-- meta: end_play
+#- debug:
+#    msg: "{{ dsm_agent_vm_name }}"
 
 #
-- name: Wait for the virtual machine to shutdown
+- name: Set fact for the name of VMware DSM Agent VM
+  set_fact:
+    dsm_agent_vm_name: "{{ ( vm_info.virtual_machines | select('search', prefix_dsm_agent_vm_name ) | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+  when: ( prefix_dsm_agent_vm_name in dsm_agent_vm_name )
+
+#
+#- debug:
+#    msg: "{{ dsm_agent_vm_name }}"
+
+#
+- name: Wait until VMware Agent VM get shutdown
   vmware_guest_powerstate:
-    hostname: "{{ vcenter_hostname }}"
-    username: "{{ vcenter_username }}"
-    password: "{{ vcenter_password }}"
+    hostname: "{{ vcenter.hostname }}"
+    username: "{{ vcenter.username }}"
+    password: "{{ vcenter.password }}"
     validate_certs: 'no'
     name: "{{ dsm_agent_vm_name }}"
     state: shutdown-guest
     state_change_timeout: 200
   delegate_to: localhost
   register: vm_shutdown
+  when: ( deploy_ovf == true ) and ( prefix_dsm_agent_vm_name in dsm_agent_vm_name )
 
 #
-- name: Set the state of a virtual machine to poweroff
+- name: Set the state of VMware Agent VM into poweroff
   vmware_guest_powerstate:
-    hostname: "{{ vcenter_hostname }}"
-    username: "{{ vcenter_username }}"
-    password: "{{ vcenter_password }}"
+    hostname: "{{ vcenter.hostname }}"
+    username: "{{ vcenter.username }}"
+    password: "{{ vcenter.password }}"
     validate_certs: 'no'
     # folder: "/{{ datacenter_name }}/vm/my_folder"
     name: "{{ dsm_agent_vm_name }}"
     state: powered-off
   delegate_to: localhost
   register: vm_poweroff
+  when: ( deploy_ovf == true ) and ( prefix_dsm_agent_vm_name in dsm_agent_vm_name )
 
 #
-- name: Remove virtual machine - "{{ dsm_agent_vm_name }}"
+- name: Remove VMware DSM Agent VM - "{{ dsm_agent_vm_name }}"
   vmware_guest:
-    hostname: "{{ vcenter_hostname }}"
-    username: "{{ vcenter_username }}"
-    password: "{{ vcenter_password }}"
+    hostname: "{{ vcenter.hostname }}"
+    username: "{{ vcenter.username }}"
+    password: "{{ vcenter.password }}"
     validate_certs: 'no'
     cluster: ""
     name: "{{ dsm_agent_vm_name }}"
     state: absent
   delegate_to: localhost
   register: vm_removed
+  when: ( deploy_ovf == true ) and ( prefix_dsm_agent_vm_name in dsm_agent_vm_name )
+
