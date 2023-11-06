@@ -196,4 +196,5 @@ $ pip3 install --force pyvmomi
 ~~~
 
 # Planning
-Uninstall DMS Provider and Agent
+Uninstall DMS Provider and Agent - 2023-11-06 : Done
+Add settings for DMS nto vCenter
