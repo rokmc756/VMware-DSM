@@ -1,6 +1,5 @@
 ---
-# - hosts: localhost
-- hosts: rk9-minio
+- hosts: localhost
   gather_facts: true
   vars:
     deploy_ovf: true
@@ -19,8 +18,9 @@
     # ansible_become_user: "moonja"
     # ansible_become_pass: "changeme"
   roles:
-    - minio
-#    - vcenter
+    - agent
+
 #    - provider
-#    - agent
+#    - minio
+#    - vcenter
 

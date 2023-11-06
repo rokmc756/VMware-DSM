@@ -5,13 +5,13 @@
 #  when: ansible_os_family != 'RedHat' or  ansible_os_family != 'CentOS' or  ansible_os_family != 'Rocky'
 
 - name: Deoploy DSM Agent
-  include: install.yml
+  import_tasks: install.yml
   tags: install
 
 - name: Uninstall DSM Agent
-  include: uninstall.yml
+  import_tasks: uninstall.yml
   tags: uninstall
 
 - name: Upgrade DSM Agent
-  include: upgrade.yml
+  import_tasks: upgrade.yml
   tags: upgrade

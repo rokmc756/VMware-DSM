@@ -2,8 +2,7 @@
 
 USERNAME=jomoon
 COMMON="yes"
-# ANSIBLE_HOST_PASS="rmsidwoalfh"
-ANSIBLE_HOST_PASS="Mc002661!@"
+ANSIBLE_HOST_PASS="Changeme12!@!@"
 ANSIBLE_TARGET_PASS="changeme"
 # include ./*.mk
 
@@ -50,17 +49,17 @@ init:	setup-host.yml update-host.yml
 	ansible-playbook -i ansible-hosts -u ${USERNAME} --ssh-common-args='-o UserKnownHostsFile=./known_hosts -o VerifyHostKeyDNS=true' install-ansible-prereqs.yml
 
 # - https://ansible-tutorial.schoolofdevops.com/control_structures/
-install: role-update setup-host.yml
-	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} setup-host.yml --tags="install"
+install: role-update install-host.yml
+	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} install-host.yml --tags="install"
 
-reinit: role-update setup-host.yml
-	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} setup-host.yml --tags="reinit"
+reinit: role-update reinit-host.yml
+	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} reinit-host.yml --tags="reinit"
 
-uninstall: role-update setup-host.yml
-	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} setup-host.yml --tags="uninstall"
+uninstall: role-update uninstall-host.yml
+	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} uninstall-host.yml --tags="uninstall"
 
-upgrade: role-update setup-host.yml
-	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} setup-host.yml --tags="upgrade"
+upgrade: role-update upgrade-host.yml
+	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} upgrade-host.yml --tags="upgrade"
 
 update:
 	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -i ${IP}, -u ${USERNAME} update-host.yml

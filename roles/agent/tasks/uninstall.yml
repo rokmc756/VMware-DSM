@@ -11,13 +11,18 @@
   register: vm_info
 
 #
-- name: Set fact for virtual machine's name of dms-agent
+- name: Set fact of virtual machine's name of DSM Agent
   set_fact:
-    dms_agent_vm_name: "{{ ( vm_info.virtual_machines | select('search', 'dms-agent') | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+    dsm_agent_vm_name: "{{ ( vm_info.virtual_machines | select('search', dsm_agent_vmname ) ) }}"
+
+    #  | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+    # dsm_agent_vm_name: "{{ ( vm_info.virtual_machines | select('search', dsm_agent_vmname ) | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
 
 #
 - debug:
-    msg: "{{ dms_agent_vm_name }}"
+    msg: "{{ dsm_agent_vm_name }}"
+
+- meta: end_play
 
 #
 - name: Wait for the virtual machine to shutdown
@@ -26,7 +31,7 @@
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
     validate_certs: 'no'
-    name: "{{ dms_agent_vm_name }}"
+    name: "{{ dsm_agent_vm_name }}"
     state: shutdown-guest
     state_change_timeout: 200
   delegate_to: localhost
@@ -40,20 +45,20 @@
     password: "{{ vcenter_password }}"
     validate_certs: 'no'
     # folder: "/{{ datacenter_name }}/vm/my_folder"
-    name: "{{ dms_agent_vm_name }}"
+    name: "{{ dsm_agent_vm_name }}"
     state: powered-off
   delegate_to: localhost
   register: vm_poweroff
 
 #
-- name: Remove virtual machine - "{{ dms_agent_vm_name }}"
+- name: Remove virtual machine - "{{ dsm_agent_vm_name }}"
   vmware_guest:
     hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
     validate_certs: 'no'
     cluster: ""
-    name: "{{ dms_agent_vm_name }}"
+    name: "{{ dsm_agent_vm_name }}"
     state: absent
   delegate_to: localhost
   register: vm_removed

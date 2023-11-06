@@ -24,8 +24,8 @@
       varoot_password: '{{ root_password }}'
       provider_ip: '192.168.0.103'
       provider_username: 'moonja@vmware.com'
-      provider_password: 'Mc002661!@#$'
-      agent_vm_name: 'dms-agent'
+      provider_password: 'Changeme12!@'
+      agent_vm_name: '{{ dsm_agent_vmname }}'
       provider_api_cert: ''
       # vami.ip0.DMS_Agent_VA: '192.168.219.105'
       vami.ip0.DMS_Agent_VA: '192.168.0.105'
@@ -68,18 +68,19 @@
   register: vm_info
 
 #
-- name: Set fact for virtual machine's name of dms-agent
+- name: Set fact for virtual machine's name of DSM Agent
   set_fact:
-    dms_agent_vm_name: "{{ ( vm_info.virtual_machines | select('search', 'dms-agent') | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+    dsm_agent_vm_name: "{{ ( vm_info.virtual_machines | select('search', dsm_agent_vmname  ) | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+    # dsm_agent_vm_name: "{{ ( vm_info.virtual_machines | select('search', _dsm_agent_vm_name  ) | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
 
 #
 - debug:
-    msg: "{{ dms_agent_vm_name }}"
+    msg: "{{ dsm_agent_vm_name }}"
 
 #
 - name: Add multiple nics
   vmware_guest_network:
-    name: "{{ dms_agent_vm_name }}"
+    name: "{{ dsm_agent_vm_name }}"
     hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
@@ -105,7 +106,7 @@
     hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
-    name: "{{ dms_agent_vm_name }}"
+    name: "{{ dsm_agent_vm_name }}"
     validate_certs: "no"
     state: powered-on
   when: add_new_network_adapter == true
@@ -123,7 +124,7 @@
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
     datacenter: "{{ datacenter_name }}"
-    vm_id: "{{ dms_agent_vm_name }}"
+    vm_id: "{{ dsm_agent_vm_name }}"
     vm_username: "{{ root_username }}"
     vm_password: "{{ root_password }}"
     validate_certs: "no"
@@ -140,7 +141,7 @@
     hostname: "{{ esxi_address }}"
     username: "{{ root_username }}"
     password: "{{ root_password }}"
-    vm_id: "{{ dms_agent_vm_name }}"
+    vm_id: "{{ dsm_agent_vm_name }}"
     vm_username: "{{ root_username }}"
     vm_password: "{{ root_password }}"
     vm_shell: "{{ item.shell }}"

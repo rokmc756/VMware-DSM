@@ -76,18 +76,18 @@
   register: vm_info
 
 #
-- name: Set fact for virtual machine's name of dms-provider
+- name: Set fact for virtual machine's name of DSM Provider
   set_fact:
-    dms_provider_vm_name: "{{ ( vm_info.virtual_machines | select('search', 'dms-provider') | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
+    dsm_provider_vm_name: "{{ ( vm_info.virtual_machines | select('search', dsm_provider_vmname ) | list | string | split(' '))[1] | regex_replace('\"', '') | regex_replace(\"'\", '')  | regex_replace(',', '') }}"
 
 #
 - debug:
-    msg: "{{ dms_provider_vm_name }}"
+    msg: "{{ dsm_provider_vm_name }}"
 
 #
 - name: Add multiple nics
   vmware_guest_network:
-    name: "{{ dms_provider_vm_name }}"
+    name: "{{ dsm_provider_vm_name }}"
     hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
@@ -112,7 +112,7 @@
     hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
-    name: "{{ dms_provider_vm_name }}"
+    name: "{{ dsm_provider_vm_name }}"
     validate_certs: "no"
     state: powered-on
   when: add_new_network_adapter == true
@@ -130,7 +130,7 @@
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
     datacenter: "{{ datacenter_name }}"
-    vm_id: "{{ dms_provider_vm_name }}"
+    vm_id: "{{ dsm_provider_vm_name }}"
     vm_username: "{{ root_username }}"
     vm_password: "{{ root_password }}"
     validate_certs: "no"
@@ -147,7 +147,7 @@
     hostname: "{{ esxi_address }}"
     username: "{{ root_username }}"
     password: "{{ root_password }}"
-    vm_id: "{{ dms_provider_vm_name }}"
+    vm_id: "{{ dsm_provider_vm_name }}"
     vm_username: "{{ root_username }}"
     vm_password: "{{ root_password }}"
     vm_shell: "{{ item.shell }}"
@@ -174,4 +174,3 @@
 #  delay: 60
 #  register: result
 #  until: result is succeeded
-

@@ -17,4 +17,9 @@ domain: 'dms-provider1.jtest.pivotal.io'
 searchpath: 'jtest.pivotal.io'
 dsm_provider_size: '50G'
 folder_name: ''
+
+dsm_provider_vmname: 'DSM-Provider-v1.5'
+dsm_agent_vmname: 'DSM-Agent-v1.5'
+
 dsm_provider_ova_file: 'roles/provider/files/dms-provider-va-1.5.0.2980-21842200.ova'
+

@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  gather_facts: true
+  vars:
+    deploy_ovf: true
+    add_new_network_adapter: true
+    configure_new_network: true
+    create_datacenter: false
+    create_cluster: false
+    add_hosts: false
+    create_users: false
+    create_roles: false
+    delete_users: false
+    delete_roles: false
+    ansible_ssh_user: "root"
+    ansible_ssh_pass: "Changeme12!@"
+    configure_firewall: true
+    # ansible_become_user: "moonja"
+    # ansible_become_pass: "changeme"
+  roles:
+    - agent
+    - provider
+#    - minio
+#    - vcenter
+
