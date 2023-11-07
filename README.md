@@ -208,3 +208,4 @@ $ pip3 install --force pyvmomi
 - Add settings for DMS into vCenter
 - Need to add Global Permission to users and assign roles to ReadOnly Users
 - Need to use and check the vmware playbook provided by ansible-galaxy for above settings - https://github.com/ansible-collections/community.vmware
+- Need to check if VMware PowerCLI cover adding global permission and assign roles
