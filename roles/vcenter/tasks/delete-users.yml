@@ -1,4 +1,5 @@
 ---
+#
 - name: Gather a domain user info of the vsphere.local domain
   community.vmware.vcenter_domain_user_group_info:
     hostname: "{{ vcenter.hostname }}"
@@ -18,7 +19,7 @@
 #
 - name: Enable normal shell if necessary
   expect:
-    command: "sshpass -p {{ vcenter_password }} ssh -o StrictHostKeyChecking=no root@vcenter"
+    command: "sshpass -p {{ vcenter.password }} ssh -o StrictHostKeyChecking=no root@vcenter"
     timeout: 2
     responses:
       'Command>': 'shell'

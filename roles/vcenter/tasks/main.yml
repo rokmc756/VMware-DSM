@@ -7,55 +7,55 @@
 #  when: ansible_os_family != 'RedHat' or  ansible_os_family != 'CentOS' or  ansible_os_family != 'Rocky'
 
 #
-- name: Deoploy DSM Agent
-  include: install.yml
-  tags: install
-  when: deploy_ovf == true
+#- name: Deoploy vCenter
+#  import_tasks: install.yml
+#  tags: install
+#  when: deploy_ovf == true
 
 #
-- name: Create Datacenter
-  include: create-datacenter.yml
-  tags: install
-  when: create_datacenter == true
+#- name: Create Datacenter
+#  import_tasks: create-datacenter.yml
+#  tags: install
+#  when: create_datacenter == true
 
 #
-- name: Create Cluser
-  include: create-cluster.yml
-  tags: install
-  when: create_cluster == true
+#- name: Create Cluser
+#  import_tasks: create-cluster.yml
+#  tags: install
+#  when: create_cluster == true
 
 #
-- name: Add Hosts
-  include: add-hosts.yml
-  tags: install
-  when: add_hosts == true
+#- name: Add Hosts
+#  import_tasks: add-hosts.yml
+#  tags: install
+#  when: add_hosts == true
 
 #
 - name: Create Users for VMware Data Service Manager
-  include: create-users.yml
+  import_tasks: create-users.yml
   tags: install
   when: create_users == true
 
 #
 - name: Create Roles for Users in VMware Data Service Manager
-  include: create-roles.yml
+  import_tasks: create-roles.yml
   tags: install
   when: create_roles == true
 
 #
 - name: Delete Roles for Users in VMware Data Service Manager
-  include: delete-roles.yml
+  import_tasks: delete-roles.yml
   tags: uninstall
   when: delete_roles == true
 
 #
 - name: Delete Users for VMware Data Service Manager
-  include: delete-users.yml
+  import_tasks: delete-users.yml
   tags: uninstall
   when: delete_users == true
 
 #
-- name: Uninstall and destory vCenter VM
-  include: uninstall.yml
-  tags: uninstall
-  when: uninstall_vcenter == true
+#- name: Uninstall and destory vCenter VM
+#  import_tasks: uninstall.yml
+#  tags: uninstall
+#  when: uninstall_vcenter == true

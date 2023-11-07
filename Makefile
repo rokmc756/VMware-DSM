@@ -50,13 +50,13 @@ init:	install-hosts.yml update-hosts.yml
 
 # - https://ansible-tutorial.schoolofdevops.com/control_structures/
 install: role-update install-hosts.yml
-	ansible-playbook -vvv -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} install-hosts.yml --tags="install"
+	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} install-hosts.yml --tags="install"
 
 reinit: role-update reinit-hosts.yml
 	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} reinit-hosts.yml --tags="reinit"
 
 uninstall: role-update uninstall-hosts.yml
-	ansible-playbook -vvv -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} uninstall-hosts.yml --tags="uninstall"
+	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} uninstall-hosts.yml --tags="uninstall"
 
 upgrade: role-update upgrade-hosts.yml
 	ansible-playbook -i ansible-hosts --ssh-common-args='-o UserKnownHostsFile=./known_hosts' -u ${USERNAME} upgrade-hosts.yml --tags="upgrade"

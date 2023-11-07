@@ -18,7 +18,7 @@
 #
 - name: Enable Bashell shell in vCenter if necessary
   expect:
-    command: "sshpass -p {{ vcenter_password }} ssh -o StrictHostKeyChecking=no root@vcenter"
+    command: "sshpass -p {{ vcenter.vm_password }} ssh -o StrictHostKeyChecking=no root@vcenter"
     timeout: 2
     responses:
       'Command>': 'shell'

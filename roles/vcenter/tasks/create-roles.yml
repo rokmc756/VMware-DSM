@@ -1,9 +1,9 @@
 #
 - name: Add local role with privileges to vCenter
   vmware_local_role_manager:
-    hostname: '{{ vcenter.hostname }}'
-    username: '{{ vcenter.username }}'
-    password: '{{ vcenter.password }}'
+    hostname: "{{ vcenter.hostname }}"
+    username: "{{ vcenter.username }}"
+    password: "{{ vcenter.password }}"
     local_role_name: "{{ item.name }}"
     local_privilege_ids: "{{ item.role }}"
     state: present
@@ -14,13 +14,14 @@
 #
 - name: Assign user and role to Object
   community.vmware.vmware_object_role_permission:
-    hostname: '{{ vcenter.hostname }}'
-    username: '{{ vcenter.username }}'
-    password: '{{ vcenter.password }}'
-    role: '{{ item.role }}'
-    principal: '{{ item.user_name }}'
-    object_type: '{{ item.obj_type }}'
-    object_name: '{{ item.obj_name }}'
+    hostname: "{{ vcenter.hostname }}"
+    username: "{{ vcenter.username }}"
+    password: "{{ vcenter.password }}"
+    role: "{{ item.role }}"
+    # principal: '{{ item.user_name }}'
+    principal: "vsphere.local\\{{ item.user_name }}"
+    object_type: "{{ item.obj_type }}"
+    object_name: "{{ item.obj_name }}"
     state: present
     recursive: true
     validate_certs: false

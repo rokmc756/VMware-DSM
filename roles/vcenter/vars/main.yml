@@ -9,61 +9,113 @@ create_datacenter: false
 create_cluster: false
 add_hosts: false
 configure_firewall: false
-# create_users: true
-# create_roles: false
-# delete_users: false
-# delete_roles: false
-
 #
 vcenter_size: '50G'
 vcsa_size: 'tiny'
 vcsa_ova_file: 'roles/vcenter/files/VMware-vCenter-Server-Appliance-7.0.3.00000-18700403_OVF10.ova'
 
-# dms_admin_user: 'dms-user'
-# dms_admin_pass: 'Changeme12!@'
-# dms_ro_user: 'dms-ro-user'
-# dms_ro_pass: 'Changeme12!@'
-
 add_users_list:
-  - { user: "test-dms-user",  pass : "Changeme12!@", fn : "Jack", ln: "Moon" }
-  - { user: "test-dms-ro-user",  pass : "Changeme12!@", fn : "Rose", ln: "Moon" }
-
-#  - { user: "dms-user",  pass : "Changeme12!@", fn : "Jack", ln: "Moon" }
-#  - { user: "dms-ro-user",  pass : "Changeme12!@", fn : "Rose", ln: "Moon" }
+  - { user: "dsm-user",  pass : "Changeme12!@", fn : "Jack", ln: "Moon" }
+  - { user: "dsm-ro-user",  pass : "Changeme12!@", fn : "Rose", ln: "Moon" }
 
 add_roles_list:
-  - { name: "test-dsm-root", role: "Sessions.ValidateSession", force: true }
-  - { name: "test-dsm-dc", role: "Datastore.FileManagement", force: false }
-  - { name: "test-dsm-cluster", role: "['Datastore.AllocateSpace','Datastore.Browse','Datastore.DeleteFile','Datastore.FileManagement','Datastore.UpdateVirtualMachineFiles','Datastore.UpdateVirtualMachineMetadata','Folder.Create','Folder.Delete','Folder.Move','Folder.Rename','Global.CancelTask','Host.Inventory.EditCluster','Network.Assign','Resource.AssignVMToPool','ScheduledTask.Create','ScheduledTask.Delete','ScheduledTask.Edit','ScheduledTask.Run','VApp.ApplicationConfig','VApp.Import','VApp.InstanceConfig','VirtualMachine.Config.AddExistingDisk','VirtualMachine.Config.AddNewDisk','VirtualMachine.Config.AddRemoveDevice','VirtualMachine.Config.AdvancedConfig','VirtualMachine.Config.Annotation','VirtualMachine.Config.ChangeTracking','VirtualMachine.Config.CPUCount','VirtualMachine.Config.DiskExtend','VirtualMachine.Config.DiskLease','VirtualMachine.Config.EditDevice','VirtualMachine.Config.HostUSBDevice','VirtualMachine.Config.Memory','VirtualMachine.Config.QueryFTCompatibility','VirtualMachine.Config.QueryUnownedFiles','VirtualMachine.Config.RawDevice','VirtualMachine.Config.ReloadFromPath','VirtualMachine.Config.RemoveDisk','VirtualMachine.Config.Rename','VirtualMachine.Config.ResetGuestInfo','VirtualMachine.Config.Resource','VirtualMachine.Config.Settings','VirtualMachine.Config.SwapPlacement','VirtualMachine.Config.UpgradeVirtualHardware','VirtualMachine.Interact.AnswerQuestion','VirtualMachine.Interact.ConsoleInteract','VirtualMachine.Interact.DeviceConnection','VirtualMachine.Interact.GuestControl','VirtualMachine.Interact.PowerOff','VirtualMachine.Interact.PowerOn','VirtualMachine.Interact.Reset','VirtualMachine.Interact.SetCDMedia','VirtualMachine.Interact.SetFloppyMedia','VirtualMachine.Interact.Suspend','VirtualMachine.Interact.ToolsInstall','VirtualMachine.Inventory.Create','VirtualMachine.Inventory.CreateFromExisting','VirtualMachine.Inventory.Delete','VirtualMachine.Inventory.Move','VirtualMachine.Provisioning.Clone','VirtualMachine.Provisioning.CloneTemplate','VirtualMachine.Provisioning.CreateTemplateFromVM','VirtualMachine.Provisioning.Customize','VirtualMachine.Provisioning.DeployTemplate','VirtualMachine.Provisioning.DiskRandomRead','VirtualMachine.Provisioning.GetVmFiles','VirtualMachine.Provisioning.MarkAsTemplate','VirtualMachine.Provisioning.MarkAsVM','VirtualMachine.Provisioning.ModifyCustSpecs','VirtualMachine.Provisioning.ReadCustSpecs','VirtualMachine.State.CreateSnapshot','VirtualMachine.State.RemoveSnapshot','VirtualMachine.State.RenameSnapshot','VirtualMachine.State.RevertToSnapshot']", force: false }
-  - { name: "test-dsm-datastore", role: "['Datastore.AllocateSpace','Datastore.Browse','Datastore.Config','Datastore.DeleteFile','Datastore.FileManagement','Datastore.UpdateVirtualMachineFiles','Datastore.UpdateVirtualMachineMetadata','Folder.Create','Folder.Delete','Folder.Move','Folder.Rename','Global.CancelTask','Host.Inventory.EditCluster','Resource.AssignVMToPool','ScheduledTask.Create','ScheduledTask.Delete','ScheduledTask.Edit','ScheduledTask.Run','System.Anonymous','System.Read','System.View','VApp.Import','VApp.InstanceConfig','VApp.ApplicationConfig','VirtualMachine.Config.AddExistingDisk','VirtualMachine.Config.AddNewDisk','VirtualMachine.Config.AddRemoveDevice','VirtualMachine.Config.AdvancedConfig','VirtualMachine.Config.CPUCount','VirtualMachine.Config.ChangeTracking','VirtualMachine.Config.DiskExtend','VirtualMachine.Config.DiskLease','VirtualMachine.Config.EditDevice','VirtualMachine.Config.HostUSBDevice','VirtualMachine.Config.Memory','VirtualMachine.Config.QueryFTCompatibility','VirtualMachine.Config.QueryUnownedFiles','VirtualMachine.Config.RawDevice','VirtualMachine.Config.ReloadFromPath','VirtualMachine.Config.RemoveDisk','VirtualMachine.Config.Rename','VirtualMachine.Config.ResetGuestInfo','VirtualMachine.Config.Resource','VirtualMachine.Config.Settings','VirtualMachine.Config.SwapPlacement','VirtualMachine.Config.UpgradeVirtualHardware','VirtualMachine.Interact.AnswerQuestion','VirtualMachine.Interact.ConsoleInteract','VirtualMachine.Interact.DeviceConnection','VirtualMachine.Interact.GuestControl','VirtualMachine.Interact.PowerOff','VirtualMachine.Interact.PowerOn','VirtualMachine.Interact.Reset','VirtualMachine.Interact.SetCDMedia','VirtualMachine.Interact.SetFloppyMedia','VirtualMachine.Interact.Suspend','VirtualMachine.Interact.ToolsInstall','VirtualMachine.Inventory.Create','VirtualMachine.Inventory.CreateFromExisting','VirtualMachine.Inventory.Delete','VirtualMachine.Inventory.Move','VirtualMachine.Provisioning.Clone','VirtualMachine.Provisioning.CloneTemplate','VirtualMachine.Provisioning.CreateTemplateFromVM','VirtualMachine.Provisioning.Customize','VirtualMachine.Provisioning.DeployTemplate','VirtualMachine.Provisioning.DiskRandomRead','VirtualMachine.Provisioning.GetVmFiles','VirtualMachine.Provisioning.MarkAsTemplate','VirtualMachine.Provisioning.MarkAsVM','VirtualMachine.Provisioning.ModifyCustSpecs','VirtualMachine.Provisioning.ReadCustSpecs','VirtualMachine.State.CreateSnapshot','VirtualMachine.State.RemoveSnapshot','VirtualMachine.State.RenameSnapshot','VirtualMachine.State.RevertToSnapshot']", force: false }
-  - { name: "test-dsm-network", role: "['Network.Assign','System.Anonymous','System.Read','System.View']", force: false }
+  - { name: "dsm-root", role: "Sessions.ValidateSession", force: true }
+  - { name: "dsm-dc", role: "Datastore.FileManagement", force: false }
+  - { name: "dsm-cluster",
+      role: "[
+               'Datastore.AllocateSpace','Datastore.Browse','Datastore.DeleteFile','Datastore.FileManagement','Datastore.UpdateVirtualMachineFiles',
+               'Datastore.UpdateVirtualMachineMetadata','Folder.Create','Folder.Delete','Folder.Move','Folder.Rename','Global.CancelTask',
+               'Host.Inventory.EditCluster','Network.Assign','Resource.AssignVMToPool','ScheduledTask.Create','ScheduledTask.Delete','ScheduledTask.Edit',
+               'ScheduledTask.Run','VApp.ApplicationConfig','VApp.Import','VApp.InstanceConfig','VirtualMachine.Config.AddExistingDisk','VirtualMachine.Config.AddNewDisk',
+               'VirtualMachine.Config.AddRemoveDevice','VirtualMachine.Config.AdvancedConfig','VirtualMachine.Config.Annotation','VirtualMachine.Config.ChangeTracking',
+               'VirtualMachine.Config.CPUCount','VirtualMachine.Config.DiskExtend','VirtualMachine.Config.DiskLease','VirtualMachine.Config.EditDevice',
+               'VirtualMachine.Config.HostUSBDevice','VirtualMachine.Config.Memory','VirtualMachine.Config.QueryFTCompatibility','VirtualMachine.Config.QueryUnownedFiles',
+               'VirtualMachine.Config.RawDevice','VirtualMachine.Config.ReloadFromPath','VirtualMachine.Config.RemoveDisk','VirtualMachine.Config.Rename',
+               'VirtualMachine.Config.ResetGuestInfo','VirtualMachine.Config.Resource','VirtualMachine.Config.Settings','VirtualMachine.Config.SwapPlacement',
+               'VirtualMachine.Config.UpgradeVirtualHardware','VirtualMachine.Interact.AnswerQuestion','VirtualMachine.Interact.ConsoleInteract',
+               'VirtualMachine.Interact.DeviceConnection','VirtualMachine.Interact.GuestControl','VirtualMachine.Interact.PowerOff','VirtualMachine.Interact.PowerOn',
+               'VirtualMachine.Interact.Reset','VirtualMachine.Interact.SetCDMedia','VirtualMachine.Interact.SetFloppyMedia','VirtualMachine.Interact.Suspend',
+               'VirtualMachine.Interact.ToolsInstall','VirtualMachine.Inventory.Create','VirtualMachine.Inventory.CreateFromExisting','VirtualMachine.Inventory.Delete',
+               'VirtualMachine.Inventory.Move','VirtualMachine.Provisioning.Clone','VirtualMachine.Provisioning.CloneTemplate','VirtualMachine.Provisioning.CreateTemplateFromVM',
+               'VirtualMachine.Provisioning.Customize','VirtualMachine.Provisioning.DeployTemplate','VirtualMachine.Provisioning.DiskRandomRead','VirtualMachine.Provisioning.GetVmFiles',
+               'VirtualMachine.Provisioning.MarkAsTemplate','VirtualMachine.Provisioning.MarkAsVM','VirtualMachine.Provisioning.ModifyCustSpecs','VirtualMachine.Provisioning.ReadCustSpecs',
+               'VirtualMachine.State.CreateSnapshot','VirtualMachine.State.RemoveSnapshot','VirtualMachine.State.RenameSnapshot','VirtualMachine.State.RevertToSnapshot']",
+      force: false
+    }
+  - { name: "dsm-datastore",
+      role: "[
+               'Datastore.AllocateSpace','Datastore.Browse','Datastore.Config','Datastore.DeleteFile','Datastore.FileManagement','Datastore.UpdateVirtualMachineFiles',
+               'Datastore.UpdateVirtualMachineMetadata','Folder.Create','Folder.Delete','Folder.Move','Folder.Rename','Global.CancelTask','Host.Inventory.EditCluster',
+               'Resource.AssignVMToPool','ScheduledTask.Create','ScheduledTask.Delete','ScheduledTask.Edit','ScheduledTask.Run','System.Anonymous','System.Read','System.View',
+               'VApp.Import','VApp.InstanceConfig','VApp.ApplicationConfig','VirtualMachine.Config.AddExistingDisk','VirtualMachine.Config.AddNewDisk','VirtualMachine.Config.AddRemoveDevice',
+               'VirtualMachine.Config.AdvancedConfig','VirtualMachine.Config.CPUCount','VirtualMachine.Config.ChangeTracking','VirtualMachine.Config.DiskExtend','VirtualMachine.Config.DiskLease',
+               'VirtualMachine.Config.EditDevice','VirtualMachine.Config.HostUSBDevice','VirtualMachine.Config.Memory','VirtualMachine.Config.QueryFTCompatibility',
+               'VirtualMachine.Config.QueryUnownedFiles','VirtualMachine.Config.RawDevice','VirtualMachine.Config.ReloadFromPath','VirtualMachine.Config.RemoveDisk','VirtualMachine.Config.Rename',
+               'VirtualMachine.Config.ResetGuestInfo','VirtualMachine.Config.Resource','VirtualMachine.Config.Settings','VirtualMachine.Config.SwapPlacement',
+               'VirtualMachine.Config.UpgradeVirtualHardware','VirtualMachine.Interact.AnswerQuestion','VirtualMachine.Interact.ConsoleInteract','VirtualMachine.Interact.DeviceConnection',
+               'VirtualMachine.Interact.GuestControl','VirtualMachine.Interact.PowerOff','VirtualMachine.Interact.PowerOn','VirtualMachine.Interact.Reset','VirtualMachine.Interact.SetCDMedia',
+               'VirtualMachine.Interact.SetFloppyMedia','VirtualMachine.Interact.Suspend','VirtualMachine.Interact.ToolsInstall','VirtualMachine.Inventory.Create',
+               'VirtualMachine.Inventory.CreateFromExisting','VirtualMachine.Inventory.Delete','VirtualMachine.Inventory.Move','VirtualMachine.Provisioning.Clone',
+               'VirtualMachine.Provisioning.CloneTemplate','VirtualMachine.Provisioning.CreateTemplateFromVM','VirtualMachine.Provisioning.Customize','VirtualMachine.Provisioning.DeployTemplate',
+               'VirtualMachine.Provisioning.DiskRandomRead','VirtualMachine.Provisioning.GetVmFiles','VirtualMachine.Provisioning.MarkAsTemplate','VirtualMachine.Provisioning.MarkAsVM',
+               'VirtualMachine.Provisioning.ModifyCustSpecs','VirtualMachine.Provisioning.ReadCustSpecs','VirtualMachine.State.CreateSnapshot','VirtualMachine.State.RemoveSnapshot',
+               'VirtualMachine.State.RenameSnapshot','VirtualMachine.State.RevertToSnapshot']",
+       force: false
+    }
+  - { name: "dsm-network", role: "['Network.Assign','System.Anonymous','System.Read','System.View']", force: false }
 
-#  - { name: "dsm-root", role: "Sessions.ValidateSession", force: true }
-#  - { name: "dsm-dc", role: "Datastore.FileManagement", force: false }
-#  - { name: "dsm-cluster", role: "['Datastore.AllocateSpace','Datastore.Browse','Datastore.DeleteFile','Datastore.FileManagement','Datastore.UpdateVirtualMachineFiles','Datastore.UpdateVirtualMachineMetadata','Folder.Create','Folder.Delete','Folder.Move','Folder.Rename','Global.CancelTask','Host.Inventory.EditCluster','Network.Assign','Resource.AssignVMToPool','ScheduledTask.Create','ScheduledTask.Delete','ScheduledTask.Edit','ScheduledTask.Run','VApp.ApplicationConfig','VApp.Import','VApp.InstanceConfig','VirtualMachine.Config.AddExistingDisk','VirtualMachine.Config.AddNewDisk','VirtualMachine.Config.AddRemoveDevice','VirtualMachine.Config.AdvancedConfig','VirtualMachine.Config.Annotation','VirtualMachine.Config.ChangeTracking','VirtualMachine.Config.CPUCount','VirtualMachine.Config.DiskExtend','VirtualMachine.Config.DiskLease','VirtualMachine.Config.EditDevice','VirtualMachine.Config.HostUSBDevice','VirtualMachine.Config.Memory','VirtualMachine.Config.QueryFTCompatibility','VirtualMachine.Config.QueryUnownedFiles','VirtualMachine.Config.RawDevice','VirtualMachine.Config.ReloadFromPath','VirtualMachine.Config.RemoveDisk','VirtualMachine.Config.Rename','VirtualMachine.Config.ResetGuestInfo','VirtualMachine.Config.Resource','VirtualMachine.Config.Settings','VirtualMachine.Config.SwapPlacement','VirtualMachine.Config.UpgradeVirtualHardware','VirtualMachine.Interact.AnswerQuestion','VirtualMachine.Interact.ConsoleInteract','VirtualMachine.Interact.DeviceConnection','VirtualMachine.Interact.GuestControl','VirtualMachine.Interact.PowerOff','VirtualMachine.Interact.PowerOn','VirtualMachine.Interact.Reset','VirtualMachine.Interact.SetCDMedia','VirtualMachine.Interact.SetFloppyMedia','VirtualMachine.Interact.Suspend','VirtualMachine.Interact.ToolsInstall','VirtualMachine.Inventory.Create','VirtualMachine.Inventory.CreateFromExisting','VirtualMachine.Inventory.Delete','VirtualMachine.Inventory.Move','VirtualMachine.Provisioning.Clone','VirtualMachine.Provisioning.CloneTemplate','VirtualMachine.Provisioning.CreateTemplateFromVM','VirtualMachine.Provisioning.Customize','VirtualMachine.Provisioning.DeployTemplate','VirtualMachine.Provisioning.DiskRandomRead','VirtualMachine.Provisioning.GetVmFiles','VirtualMachine.Provisioning.MarkAsTemplate','VirtualMachine.Provisioning.MarkAsVM','VirtualMachine.Provisioning.ModifyCustSpecs','VirtualMachine.Provisioning.ReadCustSpecs','VirtualMachine.State.CreateSnapshot','VirtualMachine.State.RemoveSnapshot','VirtualMachine.State.RenameSnapshot','VirtualMachine.State.RevertToSnapshot']", force: false }
-#  - { name: "dsm-datastore", role: "['Datastore.AllocateSpace','Datastore.Browse','Datastore.Config','Datastore.DeleteFile','Datastore.FileManagement','Datastore.UpdateVirtualMachineFiles','Datastore.UpdateVirtualMachineMetadata','Folder.Create','Folder.Delete','Folder.Move','Folder.Rename','Global.CancelTask','Host.Inventory.EditCluster','Resource.AssignVMToPool','ScheduledTask.Create','ScheduledTask.Delete','ScheduledTask.Edit','ScheduledTask.Run','System.Anonymous','System.Read','System.View','VApp.Import','VApp.InstanceConfig','VApp.ApplicationConfig','VirtualMachine.Config.AddExistingDisk','VirtualMachine.Config.AddNewDisk','VirtualMachine.Config.AddRemoveDevice','VirtualMachine.Config.AdvancedConfig','VirtualMachine.Config.CPUCount','VirtualMachine.Config.ChangeTracking','VirtualMachine.Config.DiskExtend','VirtualMachine.Config.DiskLease','VirtualMachine.Config.EditDevice','VirtualMachine.Config.HostUSBDevice','VirtualMachine.Config.Memory','VirtualMachine.Config.QueryFTCompatibility','VirtualMachine.Config.QueryUnownedFiles','VirtualMachine.Config.RawDevice','VirtualMachine.Config.ReloadFromPath','VirtualMachine.Config.RemoveDisk','VirtualMachine.Config.Rename','VirtualMachine.Config.ResetGuestInfo','VirtualMachine.Config.Resource','VirtualMachine.Config.Settings','VirtualMachine.Config.SwapPlacement','VirtualMachine.Config.UpgradeVirtualHardware','VirtualMachine.Interact.AnswerQuestion','VirtualMachine.Interact.ConsoleInteract','VirtualMachine.Interact.DeviceConnection','VirtualMachine.Interact.GuestControl','VirtualMachine.Interact.PowerOff','VirtualMachine.Interact.PowerOn','VirtualMachine.Interact.Reset','VirtualMachine.Interact.SetCDMedia','VirtualMachine.Interact.SetFloppyMedia','VirtualMachine.Interact.Suspend','VirtualMachine.Interact.ToolsInstall','VirtualMachine.Inventory.Create','VirtualMachine.Inventory.CreateFromExisting','VirtualMachine.Inventory.Delete','VirtualMachine.Inventory.Move','VirtualMachine.Provisioning.Clone','VirtualMachine.Provisioning.CloneTemplate','VirtualMachine.Provisioning.CreateTemplateFromVM','VirtualMachine.Provisioning.Customize','VirtualMachine.Provisioning.DeployTemplate','VirtualMachine.Provisioning.DiskRandomRead','VirtualMachine.Provisioning.GetVmFiles','VirtualMachine.Provisioning.MarkAsTemplate','VirtualMachine.Provisioning.MarkAsVM','VirtualMachine.Provisioning.ModifyCustSpecs','VirtualMachine.Provisioning.ReadCustSpecs','VirtualMachine.State.CreateSnapshot','VirtualMachine.State.RemoveSnapshot','VirtualMachine.State.RenameSnapshot','VirtualMachine.State.RevertToSnapshot']", force: false }
-#  - { name: "dsm-network", role: "['Network.Assign','System.Anonymous','System.Read','System.View']", force: false }
 
-
-#assign_objects_list:
-#  - { role: "dsm-root", obj_type: "Folder", obj_name: "rootFolder", user_name: "vsphere.local\\dms-user", propagate: "False" }
-#  - { role: "dsm-dc", obj_type: "Datacenter", obj_name: "Datacenter", user_name: "vsphere.local\\dms-user", propagate: "False" }
-#  - { role: "dsm-datastore", obj_type: "Datastore", obj_name: "Datastore", user_name: "vsphere.local\\dms-user", propagate: "True" }
-#  - { role: "dsm-network", obj_type: "Network", obj_name: "Network", user_name: "vsphere.local\\dms-user", propagate: "False" }
-#  - { role: "Read-only", obj_type: "Folder", obj_name: "rootFolder", user_name: "@vsphere.local\\dms-ro-user", propagate: "False" }
-#  - { role: "Read-only", obj_type: "Datacenter", obj_name: "Datacenter", user_name: "vsphere.local\\dms-ro-user", propagate: "True" }
-#  - { role: "Read-only", obj_type: "DistributedVirtualSwitch", obj_name: "DistributedVirtualSwitch", user_name: "vsphere.local\\dms-user", propagate: "False" }
-
+# https://developer.vmware.com/apis/205/vim.Folder.html#childType
+#
+# See [1] to check which obj type mapped with objname
+# https://vcenter.jtest.pivotal.io/mob/?moid=ServiceInstance&doPath=content
+#
+# See this API
+# https://developer.vmware.com/apis/1311/
+# https://docs.vmware.com/en/VMware-vSphere/7.0/com.vmware.vsphere.security.doc/GUID-03B36057-B38C-479C-BD78-341CD83A0584.html#GUID-03B36057-B38C-479C-BD78-341CD83A0584
+#  - { role: "dsm-root", obj_type: "Folder", obj_name: "root Folder", user_name: "dsm-user", propagate: "False" }
 assign_objects_list:
-  - { role: "dsm-root", obj_type: "Folder", obj_name: "Create Folder", user_name: "dms-user", propagate: "False" }
-#  - { role: "dsm-dc", obj_type: "Datacenter", obj_name: "Datacenter", user_name: "dms-user", propagate: "False" }
-#  - { role: "dsm-datastore", obj_type: "Datastore", obj_name: "Datastore", user_name: "dms-user", propagate: "True" }
-#  - { role: "dsm-network", obj_type: "Network", obj_name: "Network", user_name: "dms-user", propagate: "False" }
-#  - { role: "Read-only", obj_type: "Folder", obj_name: "Root Folder", user_name: "dms-ro-user", propagate: "False" }
-#  - { role: "Read-only", obj_type: "Datacenter", obj_name: "Datacenter", user_name: "dms-ro-user", propagate: "True" }
-#  - { role: "Read-only", obj_type: "DistributedVirtualSwitch", obj_name: "Distributed Virtual Switch", user_name: "dms-user", propagate: "False" }
+  - { role: "dsm-root", obj_type: "Folder", obj_name: "rootFolder", user_name: "dsm-user", propagate: "False" }
+  - { role: "dsm-dc", obj_type: "Datacenter", obj_name: "", user_name: "dsm-user", propagate: "False" }
+  - { role: "dsm-cluster", obj_type: "Datacenter", obj_name: "", user_name: "dsm-user", propagate: "False" }
+  - { role: "dsm-cluster", obj_type: "Folder", obj_name: "rootFolder", user_name: "dsm-user", propagate: "False" }
+  - { role: "dsm-datastore", obj_type: "Datastore", obj_name: "", user_name: "dsm-user", propagate: "True" }
+  - { role: "dsm-network", obj_type: "Network", obj_name: "", user_name: "dsm-user", propagate: "False" }
+#  - { role: "Read-only", obj_type: "Folder", obj_name: "rootFolder", user_name: "dsm-ro-user", propagate: "False" }
+#  - { role: "Read-only", obj_type: "Datacenter", obj_name: "", user_name: "dsm-ro-user", propagate: "True" }
+#  - { role: "Read-only", obj_type: "DistributedVirtualSwitch", obj_name: "", user_name: "dsm-user", propagate: "False" }
+#
+# Need to check how read-only could assign above three objects
 
-#  - { role: "dsm-cluster", obj_type: "Folder", obj_name: "vmFolder", user_name: "vsphere.local\\dms-user", propagate: "True" }
-# failed: [localhost] (item={'role': 'dsm-cluster', 'obj_type': 'Cluster', 'obj_name': 'Cluster', 'user_name': 'vsphere.local\\dms-user', 'propagate': 'True'}) => {"ansible_loop_var": "item", "changed": false, "item": {"obj_name": "Cluster", "obj_type": "Cluster", "propagate": "True", "role": "dsm-cluster", "user_name": "vsphere.local\\dms-user"}, "msg": "value of object_type must be one of: Folder, VirtualMachine, Datacenter, ResourcePool, Datastore, Network, HostSystem, ComputeResource, ClusterComputeResource, DistributedVirtualSwitch, DistributedVirtualPortgroup, StoragePod, got: Cluster"}
+# ment user and a monitoring user, for example, dsm-user and  dsm-read-only-user.
+# 3. Assign roles for different objects to these users as follows:
+# Note: Read-only role is an existing system-level role in vCenter.
+# | Role Name     | Object                      | Username           | Propagate
+# | dsm-root      | Root folder                 | dsm-user           | False
+# | dsm-dc        | Datacenter                  | dsm-user           | False
+# | dsm-cluster   | Cluster                     | dsm-user           | True
+# | dsm-cluster   | VM Folder                   | dsm-user           | True
+# | dsm-datastore | Datastore                   | dsm-user           | True
+# | dsm-network   | Network                     | dsm-user           | False
+# | Read-only     | Root Folder                 | dsm-read-only-user | False
+# | Read-only     | Datacenter                  | dsm-read-only-user | True
+# | Read-only     | Distributed Virtual Switch  | dsm-user           | False
+
+
+# https://docs.ansible.com/ansible/latest/collections/community/vmware/vmware_object_role_permission_module.html
+# The object type being targeted.
+# Choices:
+# "Folder" ← (default)
+# "VirtualMachine"
+# "Datacenter"
+# "ResourcePool"
+# "Datastore"
+# "Network"
+# "HostSystem"
+# "ComputeResource"
+# "ClusterComputeResource"
+# "DistributedVirtualSwitch"
+# "DistributedVirtualPortgroup"
+# "StoragePod"
 
 # https://docs.vmware.com/en/VMware-Data-Services-Manager/1.5/data-services-manager.pdf
