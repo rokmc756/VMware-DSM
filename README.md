@@ -207,4 +207,4 @@ $ pip3 install --force pyvmomi
 - Uninstall DMS Provider and Agent - 2023-11-06 : Done
 - Add settings for DMS into vCenter
 - Need to add Global Permission to users and assign roles to ReadOnly Users
-- Need to use the vmware playbook provided by ansible-galaxy - https://github.com/ansible-collections/community.vmware
+- Need to use and check the vmware playbook provided by ansible-galaxy for above settings - https://github.com/ansible-collections/community.vmware
