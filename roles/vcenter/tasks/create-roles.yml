@@ -11,6 +11,19 @@
   with_items: "{{ add_roles_list }}"
   delegate_to: localhost
 
+#- name: Assign dsm-user to Administrator
+#  community.vmware.vmware_object_role_permission:
+#    hostname: '{{ vcenter.hostname }}'
+#    username: '{{ vcenter.username }}'
+#    password: '{{ vcenter.password }}'
+#    role: Admin
+#    principal: "vsphere.local\\dsm-user"
+#    object_name: ""
+#    state: present
+#    validate_certs: false
+#  ignore_errors: true
+#  delegate_to: localhost
+
 #
 - name: Assign user and role to Object
   community.vmware.vmware_object_role_permission:

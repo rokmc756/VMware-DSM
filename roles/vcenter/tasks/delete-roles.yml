@@ -14,6 +14,19 @@
   with_items: "{{ assign_objects_list }}"
   delegate_to: localhost
 
+#- name: Disassign dsm-user to Administrator
+#  community.vmware.vmware_object_role_permission:
+#    hostname: '{{ vcenter.hostname }}'
+#    username: '{{ vcenter.username }}'
+#    password: '{{ vcenter.password }}'
+#    role: Admin
+#    principal: "vsphere.local\\dsm-user"
+#    object_name: ""
+#    state: absent
+#    validate_certs: false
+#  ignore_errors: true
+#  delegate_to: localhost
+
 #
 - name: Remove local role with privileges to vCenter
   vmware_local_role_manager:
