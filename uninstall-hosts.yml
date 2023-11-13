@@ -2,14 +2,14 @@
 - hosts: localhost
   gather_facts: true
   vars:
-    deploy_ovf: false
-    add_new_network_adapter: false
-    configure_new_network: false
+    deploy_ovf: true
+    add_new_network_adapter: true
+    configure_new_network: true
     uninstall_vcenter: false
-    delete_roles: true
-    delete_users: true
+    delete_roles: false
+    delete_users: false
   roles:
-    - vcenter
-#    - agent
-#    - provider
+    - agent
+    - provider
+#    - vcenter
 #    - minio

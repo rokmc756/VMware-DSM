@@ -83,7 +83,16 @@ assign_objects_list:
   - { role: "dsm-network", obj_type: "Network", obj_name: "", user_name: "dsm-user", propagate: "False" }
   - { role: "ReadOnly", obj_type: "Folder", obj_name: "rootFolder", user_name: "dsm-ro-user", propagate: "False" }
   - { role: "ReadOnly", obj_type: "Datacenter", obj_name: "", user_name: "dsm-ro-user", propagate: "True" }
+  - { role: "ReadOnly", obj_type: "DistributedVirtualSwitch", obj_name: "jDSwitch01", user_name: "dsm-user", propagate: "False" }
+  # [WARNING]: You are applying permissions to a Distributed vSwitch. This will probably fail, since Distributed vSwitches inherits
+  # permissions from the datacenter or a folder level. Define permissions on the datacenter or the folder containing the switch.
+
+# Original
 #  - { role: "ReadOnly", obj_type: "DistributedVirtualSwitch", obj_name: "", user_name: "dsm-user", propagate: "False" }
+
+# "msg": "value of object_type must be one of: Folder, VirtualMachine, Datacenter, ResourcePool, Datastore, Network,
+# HostSystem, ComputeResource, ClusterComputeResource, DistributedVirtualSwitch, DistributedVirtualPortgroup, StoragePod,
+# "DistributedVirtualSwitch"
 # Need to check Why ReadOnly not found DistributedVirtualSwitch
 
 # ment user and a monitoring user, for example, dsm-user and  dsm-read-only-user.
