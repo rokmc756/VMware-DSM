@@ -1,22 +1,22 @@
-# JSON DATA PUSH API by Robert Prochowicz
-# Tested with MSTR 10.10 / 2018-01-30
+# JSON DATA PUSH API by Jack Moon
+# Tested with VMware Data Service Manager2013-11-14
 
 import requests
 
 ### Parameters ###
-environmentId = '82809'
+# environmentId = '82809'
 api_login = 'jomoon@pivotal.io'
 api_password = 'changeme'
 # base_url = "https://env-" + environmentId + ".customer.cloud.microstrategy.com/MicroStrategyLibrary/api/";
-base_url = "https://dsm-provider.jtest.pivotal.io/provider/session"
+login_url = "https://dsm-provider.jtest.pivotal.io/provider/session"
+orgs_url = "https://dsm-provider.jtest.pivotal.io/provider/session"
 
 
 #### FUNCTIONS ###
-def login(base_url,api_login,api_password):
+def login(login_url,api_login,api_password):
     print("Getting token...")
-    data_get = {'username': api_login,
-                'password': api_password,
-                'loginMode': 1}
+    data_get = { 'username': api_login, 'password': api_password, 'loginMode': 1}
+
     r = requests.post(base_url + 'auth/login', data=data_get)
     if r.ok:
         authToken = r.headers['X-MSTR-AuthToken']
