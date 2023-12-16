@@ -333,11 +333,11 @@ def create_s3_storage1(s3_url, access_token, x_org_id):
     # print(json.dumps({'a': str(b)}))
     #   "id": json.dumps({'a': str(uuid.uuid4())}),
     #  "id": x_org_id,
-    #  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     s3_data1 = {
-      "name": "s3test01",
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "name": "s3test02",
       "endpoint": "https://minio.jtest.pivotal.io:9000",
-      "bucket": "jbucket04",
+      "bucket": "jbucket05",
       "accessKey": "minioadmin",
       "secretKey": "changeme",
       "region": "",
