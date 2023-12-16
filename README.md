@@ -32,7 +32,7 @@ $ sudo yum install ansible
 $ sudo yum install sshpass
 ```
 
-# Download / configure / deploy or destory VMware DSM
+## Download / configure / deploy or destory VMware DSM
 ```
 $ git clone https://github.com/rokmc756/VMware-DSM
 ```
@@ -43,7 +43,6 @@ $ cd VMware-DSM
 ```
 
 ## Edit the password of ansilble host and target
-####
 ```
 $ vi Makefile
 ANSIBLE_HOST_PASS="changeme"      # It should be changed with password of user in ansible host that gpfarmer would be run.
@@ -51,7 +50,6 @@ ANSIBLE_TARGET_PASS="changeme"    # It should be changed with password of sudo u
 ```
 
 ## Define ansible-hosts file
-#### t
 ```
 $ vi ansible-hosts
 [all:vars]
@@ -77,7 +75,6 @@ rk9-minio ansible_ssh_host=192.168.0.98
 ```
 
 ## Defind all variables which would not that be changable for VMware DSM Provider & Agent VMs
-#### t
 ```
 $ vi group_vars/all.yml
 # ansible_become_pass: "Changeme12!@"
@@ -139,7 +136,6 @@ dsm:
     provider_username: 'jomoon@pivotal.io'
     provider_password: 'Changeme12!@'
 ```
-~~~
 
 ## Define the name and size and local file location of VMware DSM Provider VM
 ```
@@ -174,7 +170,7 @@ $ vi install-hosts.yml
     - agent
 ```
 
-## Run install-hosts.yml playbook
+## Deploy VMware-DSM
 ```
 $ make install
 ```
@@ -194,7 +190,7 @@ $ vi uninstall-hosts.yml
     - provider
 ```
 
-## Run uninstall-hosts.yml playbook
+## Destroy VMware-DSM
 ```
 $ make uninstall
 ```
