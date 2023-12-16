@@ -74,7 +74,7 @@ dms-agent1 ansible_ssh_host=192.168.0.105
 rk9-minio ansible_ssh_host=192.168.0.98
 ```
 
-## Defind all variables which would not that be changable for DSM Provider & Agent VMs
+## Defind all variables for DSM Provider & Agent VMs
 ```
 $ vi group_vars/all.yml
 # ansible_become_pass: "Changeme12!@"
